@@ -28,12 +28,65 @@ const props = defineProps({
         type: String,
         default: 'Operations Hub',
     },
+    breadcrumbs: {
+        type: Array,
+        default: () => [],
+    },
 });
 
 const page = usePage();
 const user = computed(() => page.props.auth?.user);
 const menuItems = computed(() => page.props.adminMenu || []);
 const appSettings = computed(() => page.props.appSettings || { name: 'AdminHub Enterprise' });
+
+// Dynamic Breadcrumb Resolver based on adminMenu groups and active routes
+const resolvedBreadcrumbs = computed(() => {
+    if (props.breadcrumbs && props.breadcrumbs.length > 0) {
+        return props.breadcrumbs;
+    }
+
+    const crumbs = [];
+
+    for (const item of menuItems.value) {
+        if (!item.children) {
+            if (isRouteActive(item.active)) {
+                crumbs.push({
+                    title: item.title,
+                    url: item.route ? route(item.route) : null,
+                    isCurrent: true,
+                });
+                return crumbs;
+            }
+        } else {
+            const activeChild = item.children.find((child) => child.active && isRouteActive(child.active));
+            if (activeChild) {
+                // Parent group
+                crumbs.push({
+                    title: item.title,
+                    url: null,
+                    isCurrent: false,
+                });
+                // Child route
+                crumbs.push({
+                    title: activeChild.title,
+                    url: activeChild.route ? route(activeChild.route) : null,
+                    isCurrent: true,
+                });
+                return crumbs;
+            }
+        }
+    }
+
+    if (props.title) {
+        crumbs.push({
+            title: props.title,
+            url: null,
+            isCurrent: true,
+        });
+    }
+
+    return crumbs;
+});
 
 // Sidebar state
 const sidebarOpen = ref(false);
@@ -316,12 +369,37 @@ const logout = () => {
 
                     <div class="h-4 w-px bg-slate-200 dark:bg-slate-800 hidden sm:block"></div>
 
-                    <!-- Breadcrumb / Section Header -->
-                    <div class="flex items-center gap-2">
-                        <span class="text-xs font-mono font-medium text-slate-400 uppercase tracking-wider hidden md:inline">Operations</span>
-                        <span class="text-slate-300 dark:text-slate-700 hidden md:inline">/</span>
-                        <span class="text-xs font-bold text-slate-900 dark:text-white">{{ title }}</span>
-                    </div>
+                    <!-- Dynamic Breadcrumb Navigation -->
+                    <nav class="flex items-center gap-1.5 text-xs" aria-label="Breadcrumb">
+                        <template v-for="(crumb, idx) in resolvedBreadcrumbs" :key="idx">
+                            <span v-if="idx > 0" class="text-slate-300 dark:text-slate-700 select-none">/</span>
+
+                            <!-- Clickable Link (if previous crumb has route) -->
+                            <Link
+                                v-if="crumb.url && !crumb.isCurrent"
+                                :href="crumb.url"
+                                class="font-medium text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition truncate max-w-[140px]"
+                            >
+                                {{ crumb.title }}
+                            </Link>
+
+                            <!-- Non-clickable group name (e.g. User Management) -->
+                            <span
+                                v-else-if="!crumb.isCurrent"
+                                class="font-mono text-slate-400 dark:text-slate-500 uppercase tracking-wider text-[11px] truncate max-w-[140px] hidden sm:inline"
+                            >
+                                {{ crumb.title }}
+                            </span>
+
+                            <!-- Active current page name -->
+                            <span
+                                v-else
+                                class="font-bold text-slate-900 dark:text-white truncate max-w-[200px]"
+                            >
+                                {{ crumb.title }}
+                            </span>
+                        </template>
+                    </nav>
                 </div>
 
                 <!-- Right Header Actions -->
