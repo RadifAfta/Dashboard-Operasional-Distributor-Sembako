@@ -114,18 +114,11 @@ const exportAuditCSV = () => {
             <!-- 1. Executive Operations Header (Stripe / Linear Grade) -->
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-5 border-b border-slate-200 dark:border-slate-800">
                 <div>
-                    <div class="flex items-center gap-2 mb-1">
-                        <span class="px-2 py-0.5 text-[10px] font-mono font-bold uppercase rounded bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                            Telemetry Engine v13
-                        </span>
-                        <span class="text-slate-300 dark:text-slate-700">&bull;</span>
-                        <span class="text-xs font-mono text-slate-500 dark:text-slate-400">Node ID: {{ systemStats.host || 'srv-primary-01' }}</span>
-                    </div>
                     <h2 class="text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white">
                         Pusat Operasional & Audit Sistem
                     </h2>
-                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                        Pemantauan telemetri real-time, status integritas layanan, dan jejak audit keamanan perusahaan.
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                        Pemantauan performa operasional, status integritas layanan, dan jejak audit keamanan perusahaan.
                     </p>
                 </div>
 
@@ -289,7 +282,7 @@ const exportAuditCSV = () => {
                     <div>
                         <div class="flex items-center gap-2">
                             <h3 class="text-sm font-bold text-slate-900 dark:text-white font-mono uppercase tracking-wider">
-                                System Request Telemetry (24-Hour Timeline)
+                                Aktivitas Permintaan Sistem (24 Jam Terakhir)
                             </h3>
                             <span class="px-2 py-0.5 text-[10px] font-mono font-bold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
                                 Peak: {{ throughput.peak.toLocaleString() }} req/hr
