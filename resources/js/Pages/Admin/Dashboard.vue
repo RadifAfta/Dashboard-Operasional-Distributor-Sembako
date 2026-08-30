@@ -154,7 +154,7 @@ const exportAuditCSV = () => {
             <!-- 2. Precision Operational KPI Cards (Linear / Stripe Style) -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <!-- Card 1: Throughput -->
-                <div class="p-5 bg-white border border-slate-200 rounded-xl dark:bg-[#0D121F] dark:border-slate-800/90 shadow-2xs">
+                <div class="spotlight-card p-5 bg-white border border-slate-200 rounded-xl dark:bg-[#0D121F] dark:border-slate-800/90 shadow-2xs">
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-mono font-medium uppercase tracking-wider text-slate-400 dark:text-slate-500">
                             Daily Throughput
@@ -177,7 +177,7 @@ const exportAuditCSV = () => {
                 </div>
 
                 <!-- Card 2: Pending Approvals -->
-                <div class="p-5 bg-white border border-slate-200 rounded-xl dark:bg-[#0D121F] dark:border-slate-800/90 shadow-2xs">
+                <div class="spotlight-card p-5 bg-white border border-slate-200 rounded-xl dark:bg-[#0D121F] dark:border-slate-800/90 shadow-2xs">
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-mono font-medium uppercase tracking-wider text-slate-400 dark:text-slate-500">
                             Pending Review
@@ -201,7 +201,7 @@ const exportAuditCSV = () => {
                 </div>
 
                 <!-- Card 3: Security & Compliance -->
-                <div class="p-5 bg-white border border-slate-200 rounded-xl dark:bg-[#0D121F] dark:border-slate-800/90 shadow-2xs">
+                <div class="spotlight-card p-5 bg-white border border-slate-200 rounded-xl dark:bg-[#0D121F] dark:border-slate-800/90 shadow-2xs">
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-mono font-medium uppercase tracking-wider text-slate-400 dark:text-slate-500">
                             Compliance Score
@@ -223,7 +223,7 @@ const exportAuditCSV = () => {
                 </div>
 
                 <!-- Card 4: Uptime SLA & Latency -->
-                <div class="p-5 bg-white border border-slate-200 rounded-xl dark:bg-[#0D121F] dark:border-slate-800/90 shadow-2xs">
+                <div class="spotlight-card p-5 bg-white border border-slate-200 rounded-xl dark:bg-[#0D121F] dark:border-slate-800/90 shadow-2xs">
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-mono font-medium uppercase tracking-wider text-slate-400 dark:text-slate-500">
                             Uptime & Latency

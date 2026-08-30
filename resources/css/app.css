@@ -37,6 +37,34 @@
     background: rgba(71, 85, 105, 0.7);
 }
 
+/* High-Craft Blueprint Dot-Matrix Background */
+.bg-dot-matrix {
+    background-image: radial-gradient(rgba(148, 163, 184, 0.25) 1px, transparent 1px);
+    background-size: 24px 24px;
+}
+
+.dark .bg-dot-matrix {
+    background-image: radial-gradient(rgba(51, 65, 85, 0.35) 1px, transparent 1px);
+    background-size: 24px 24px;
+}
+
+/* Spotlight Card Hover & Border Glow */
+.spotlight-card {
+    position: relative;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.spotlight-card:hover {
+    border-color: rgba(99, 102, 241, 0.4);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+    transform: translateY(-1.5px);
+}
+
+.dark .spotlight-card:hover {
+    border-color: rgba(129, 140, 248, 0.45);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 0 18px 2px rgba(99, 102, 241, 0.1);
+}
+
 /* Tactile Bento Card Styles */
 .bento-card {
     transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
@@ -45,4 +73,3 @@
 .bento-card:hover {
     transform: translateY(-2px);
 }
-

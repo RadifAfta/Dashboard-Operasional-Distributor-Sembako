@@ -2,6 +2,7 @@
 import { ref, onMounted, computed, onUnmounted } from 'vue';
 import { Link, usePage, router } from '@inertiajs/vue3';
 import Toast from '@/Components/Admin/Toast.vue';
+import CommandPalette from '@/Components/Admin/CommandPalette.vue';
 import {
     LayoutDashboard,
     Users,
@@ -38,6 +39,7 @@ const appSettings = computed(() => page.props.appSettings || { name: 'AdminHub E
 const sidebarOpen = ref(false);
 const sidebarCollapsed = ref(false);
 const openSubmenus = ref({});
+const showCommandPalette = ref(false);
 
 // Theme State
 const isDark = ref(false);
@@ -114,9 +116,16 @@ const logout = () => {
 </script>
 
 <template>
-    <div class="min-h-screen bg-slate-100/70 text-slate-900 dark:bg-[#090D16] dark:text-slate-100 font-sans antialiased flex flex-col selection:bg-slate-900 selection:text-white dark:selection:bg-slate-100 dark:selection:text-slate-900">
+    <div class="min-h-screen bg-slate-100/70 text-slate-900 dark:bg-[#090D16] dark:text-slate-100 bg-dot-matrix font-sans antialiased flex flex-col selection:bg-slate-900 selection:text-white dark:selection:bg-slate-100 dark:selection:text-slate-900">
         <!-- Toast Notification Container -->
         <Toast />
+
+        <!-- Interactive Raycast/Linear Command Palette (Ctrl + K) -->
+        <CommandPalette
+            v-model="showCommandPalette"
+            :is-dark="isDark"
+            @toggle-theme="toggleTheme"
+        />
 
         <!-- Mobile Backdrop -->
         <div
@@ -318,16 +327,25 @@ const logout = () => {
                 <!-- Right Header Actions -->
                 <div class="flex items-center gap-3">
                     <!-- Search Command Palette Indicator -->
-                    <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 bg-slate-50/80 dark:bg-slate-900 dark:border-slate-800 text-xs text-slate-400 cursor-pointer hover:border-slate-300 dark:hover:border-slate-700 transition">
-                        <Search class="w-3.5 h-3.5" />
-                        <span class="text-[11px]">Cari log, audit, user...</span>
-                        <kbd class="px-1.5 py-0.5 text-[10px] font-mono bg-white border border-slate-200 rounded text-slate-500 dark:bg-slate-800 dark:border-slate-700">Ctrl K</kbd>
-                    </div>
+                    <button
+                        type="button"
+                        @click="showCommandPalette = true"
+                        class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 bg-slate-50/80 dark:bg-slate-900 dark:border-slate-800 text-xs text-slate-400 cursor-pointer hover:border-slate-300 dark:hover:border-slate-700 hover:text-slate-600 dark:hover:text-slate-300 transition group"
+                        title="Buka Command Palette (Ctrl + K)"
+                    >
+                        <Search class="w-3.5 h-3.5 group-hover:text-indigo-600 transition" />
+                        <span class="text-[11px]">Cari menu, audit, aksi...</span>
+                        <kbd class="px-1.5 py-0.5 text-[10px] font-mono bg-white border border-slate-200 rounded text-slate-500 dark:bg-slate-800 dark:border-slate-700 group-hover:border-indigo-300 transition">Ctrl K</kbd>
+                    </button>
 
-                    <!-- Live Cluster Status Pill -->
-                    <div class="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-50 border border-emerald-200/80 dark:bg-emerald-950/40 dark:border-emerald-900/60 text-[11px] font-mono font-medium text-emerald-700 dark:text-emerald-400">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span>CLUSTER HEALTHY</span>
+                    <!-- Live Cluster Telemetry Capsule -->
+                    <div class="hidden lg:flex items-center gap-2 px-2.5 py-1 rounded-md bg-slate-50 border border-slate-200 dark:bg-slate-900/80 dark:border-slate-800 text-[11px] font-mono font-medium">
+                        <span class="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span>24ms</span>
+                        </span>
+                        <span class="text-slate-300 dark:text-slate-700">&bull;</span>
+                        <span class="text-slate-600 dark:text-slate-400 font-semibold">SLA 99.98%</span>
                     </div>
 
                     <!-- Dark / Light Toggle -->
