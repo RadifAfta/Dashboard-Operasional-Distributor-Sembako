@@ -85,7 +85,10 @@ class UserController extends Controller
 
         $user->assignRole($validated['role']);
 
-        return redirect()->route('admin.users.index')->with('success', 'User berhasil ditambahkan.');
+        return redirect()->route('admin.users.index')->with('success', [
+            'title' => 'Pengguna Berhasil Ditambahkan',
+            'message' => "Akun {$user->name} telah berhasil didaftarkan dan siap digunakan.",
+        ]);
     }
 
     /**
@@ -111,7 +114,10 @@ class UserController extends Controller
 
         $user->syncRoles([$validated['role']]);
 
-        return redirect()->route('admin.users.index')->with('success', 'Data user berhasil diperbarui.');
+        return redirect()->route('admin.users.index')->with('success', [
+            'title' => 'Perubahan Berhasil Disimpan',
+            'message' => "Data profil dan hak akses untuk {$user->name} telah diperbarui.",
+        ]);
     }
 
     /**
@@ -121,17 +127,27 @@ class UserController extends Controller
     {
         // Prevent user from deleting own account
         if ($user->id === $request->user()->id) {
-            return redirect()->route('admin.users.index')->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
+            return redirect()->route('admin.users.index')->with('error', [
+                'title' => 'Tindakan Dibatasi',
+                'message' => 'Anda tidak dapat menghapus akun Anda sendiri saat sedang masuk ke sistem.',
+            ]);
         }
 
         // Prevent deleting the primary superadmin
         if ($user->hasRole('Super Admin') && User::role('Super Admin')->count() <= 1) {
-            return redirect()->route('admin.users.index')->with('error', 'Tidak dapat menghapus Super Admin terakhir.');
+            return redirect()->route('admin.users.index')->with('error', [
+                'title' => 'Proteksi Akun Kunci',
+                'message' => 'Sistem wajib memiliki minimal satu akun Super Admin aktif. Akun ini dilindungi dari penghapusan.',
+            ]);
         }
 
+        $userName = $user->name;
         $user->delete();
 
-        return redirect()->route('admin.users.index')->with('success', 'User berhasil dihapus.');
+        return redirect()->route('admin.users.index')->with('success', [
+            'title' => 'Pengguna Dihapus',
+            'message' => "Akun {$userName} telah berhasil dihapus dari sistem.",
+        ]);
     }
 
     /**
@@ -147,8 +163,12 @@ class UserController extends Controller
         $currentUserId = $request->user()->id;
         $idsToDelete = array_filter($validated['ids'], fn ($id) => (int) $id !== $currentUserId);
 
+        $count = count($idsToDelete);
         User::whereIn('id', $idsToDelete)->delete();
 
-        return redirect()->route('admin.users.index')->with('success', count($idsToDelete).' user berhasil dihapus.');
+        return redirect()->route('admin.users.index')->with('success', [
+            'title' => 'Penghapusan Massal Selesai',
+            'message' => "Sebanyak {$count} pengguna terpilih berhasil dihapus dari database.",
+        ]);
     }
 }

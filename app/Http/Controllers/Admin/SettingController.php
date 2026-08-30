@@ -38,6 +38,9 @@ class SettingController extends Controller
             Setting::set($item['key'], $item['value'] ?? '');
         }
 
-        return redirect()->route('admin.settings.index')->with('success', 'Pengaturan berhasil disimpan.');
+        return redirect()->route('admin.settings.index')->with('success', [
+            'title' => 'Pengaturan Berhasil Disimpan',
+            'message' => 'Seluruh perubahan parameter dan preferensi sistem telah diterapkan dan di-cache ulang.',
+        ]);
     }
 }

@@ -50,7 +50,10 @@ class RoleController extends Controller
             $role->syncPermissions($validated['permissions']);
         }
 
-        return redirect()->route('admin.roles.index')->with('success', 'Role berhasil dibuat.');
+        return redirect()->route('admin.roles.index')->with('success', [
+            'title' => 'Role Baru Berhasil Dibuat',
+            'message' => "Tingkatan hak akses untuk '{$role->name}' telah siap dikonfigurasikan ke pengguna.",
+        ]);
     }
 
     /**
@@ -66,7 +69,10 @@ class RoleController extends Controller
 
         // Protect Super Admin role name from renaming
         if ($role->name === 'Super Admin' && $validated['name'] !== 'Super Admin') {
-            return redirect()->route('admin.roles.index')->with('error', 'Nama role Super Admin tidak dapat diubah.');
+            return redirect()->route('admin.roles.index')->with('error', [
+                'title' => 'Perubahan Dibatasi',
+                'message' => 'Nama tingkatan Super Admin merupakan standar identitas sistem dan tidak dapat diubah.',
+            ]);
         }
 
         $role->update(['name' => $validated['name']]);
@@ -75,7 +81,10 @@ class RoleController extends Controller
             $role->syncPermissions($validated['permissions']);
         }
 
-        return redirect()->route('admin.roles.index')->with('success', 'Role berhasil diperbarui.');
+        return redirect()->route('admin.roles.index')->with('success', [
+            'title' => 'Matriks Hak Akses Diperbarui',
+            'message' => "Daftar izin dan wewenang untuk role '{$role->name}' telah berhasil disinkronkan.",
+        ]);
     }
 
     /**
@@ -84,15 +93,26 @@ class RoleController extends Controller
     public function destroy(Role $role): RedirectResponse
     {
         if (in_array($role->name, ['Super Admin', 'Admin', 'User'])) {
-            return redirect()->route('admin.roles.index')->with('error', 'Role sistem bawaan tidak dapat dihapus.');
+            return redirect()->route('admin.roles.index')->with('error', [
+                'title' => 'Role Sistem Dilindungi',
+                'message' => "Role bawaan '{$role->name}' sangat krusial bagi operasional platform dan tidak dapat dihapus.",
+            ]);
         }
 
-        if ($role->users()->count() > 0) {
-            return redirect()->route('admin.roles.index')->with('error', 'Tidak dapat menghapus role yang masih memiliki anggota user.');
+        $userCount = $role->users()->count();
+        if ($userCount > 0) {
+            return redirect()->route('admin.roles.index')->with('error', [
+                'title' => 'Role Masih Digunakan',
+                'message' => "Terdapat {$userCount} pengguna yang masih menggunakan role ini. Mohon alihkan role mereka terlebih dahulu.",
+            ]);
         }
 
+        $roleName = $role->name;
         $role->delete();
 
-        return redirect()->route('admin.roles.index')->with('success', 'Role berhasil dihapus.');
+        return redirect()->route('admin.roles.index')->with('success', [
+            'title' => 'Role Berhasil Dihapus',
+            'message' => "Role '{$roleName}' telah dihapus dari daftar hak akses sistem.",
+        ]);
     }
 }

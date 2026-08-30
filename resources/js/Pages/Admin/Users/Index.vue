@@ -4,7 +4,9 @@ import { Head, useForm, router } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import DataTable from '@/Components/Admin/DataTable.vue';
 import Badge from '@/Components/Admin/Badge.vue';
+import Alert from '@/Components/Admin/Alert.vue';
 import ConfirmationModal from '@/Components/Admin/ConfirmationModal.vue';
+import { useToast } from '@/Composables/useToast';
 import {
     UserPlus,
     Trash2,
@@ -60,6 +62,8 @@ const editForm = useForm({
     role: 'User',
 });
 
+const toast = useToast();
+
 const openCreateModal = () => {
     createForm.reset();
     createForm.clearErrors();
@@ -72,6 +76,9 @@ const submitCreate = () => {
         onSuccess: () => {
             showCreateModal.value = false;
             createForm.reset();
+        },
+        onError: () => {
+            toast.error('Isian Belum Lengkap', 'Mohon periksa kembali kolom bertanda merah di formulir Anda.');
         },
     });
 };
@@ -92,6 +99,9 @@ const submitEdit = () => {
         onSuccess: () => {
             showEditModal.value = false;
             editForm.reset();
+        },
+        onError: () => {
+            toast.error('Perubahan Belum Dapat Disimpan', 'Terdapat format isian yang belum sesuai pada formulir.');
         },
     });
 };
@@ -273,6 +283,13 @@ const handleRoleFilter = (e) => {
                     </div>
 
                     <form @submit.prevent="submitCreate" class="mt-4 space-y-4 text-xs">
+                        <Alert
+                            v-if="createForm.hasErrors"
+                            type="error"
+                            title="Isian Belum Lengkap"
+                            description="Terdapat isian yang belum sesuai. Mohon periksa kembali kolom bertanda merah di bawah."
+                            class="mb-2"
+                        />
                         <div>
                             <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Nama Lengkap</label>
                             <input
@@ -357,6 +374,13 @@ const handleRoleFilter = (e) => {
                     </div>
 
                     <form @submit.prevent="submitEdit" class="mt-4 space-y-4 text-xs">
+                        <Alert
+                            v-if="editForm.hasErrors"
+                            type="error"
+                            title="Isian Belum Tepat"
+                            description="Terdapat format data yang belum valid. Mohon periksa kembali kolom bertanda merah di bawah."
+                            class="mb-2"
+                        />
                         <div>
                             <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Nama Lengkap</label>
                             <input

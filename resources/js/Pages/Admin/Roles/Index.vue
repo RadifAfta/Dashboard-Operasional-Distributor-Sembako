@@ -3,7 +3,9 @@ import { ref } from 'vue';
 import { Head, useForm, router } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import Badge from '@/Components/Admin/Badge.vue';
+import Alert from '@/Components/Admin/Alert.vue';
 import ConfirmationModal from '@/Components/Admin/ConfirmationModal.vue';
+import { useToast } from '@/Composables/useToast';
 import {
     Shield,
     Plus,
@@ -30,6 +32,7 @@ const showCreateModal = ref(false);
 const showEditModal = ref(false);
 const showDeleteModal = ref(false);
 const roleToDelete = ref(null);
+const toast = useToast();
 
 const createForm = useForm({
     name: '',
@@ -55,6 +58,9 @@ const submitCreate = () => {
             showCreateModal.value = false;
             createForm.reset();
         },
+        onError: () => {
+            toast.error('Gagal Menyimpan Role', 'Mohon lengkapi nama role dan pilih izin yang sesuai.');
+        },
     });
 };
 
@@ -72,6 +78,9 @@ const submitEdit = () => {
         onSuccess: () => {
             showEditModal.value = false;
             editForm.reset();
+        },
+        onError: () => {
+            toast.error('Perubahan Belum Disimpan', 'Terdapat kendala pada data nama role atau daftar izin.');
         },
     });
 };
@@ -232,6 +241,13 @@ const toggleGroup = (form, groupPermissions) => {
                     </div>
 
                     <form @submit.prevent="submitCreate" class="mt-4 space-y-4 text-xs">
+                        <Alert
+                            v-if="createForm.hasErrors"
+                            type="error"
+                            title="Isian Belum Lengkap"
+                            description="Mohon lengkapi nama role dan pastikan tidak duplikat dengan role yang ada."
+                            class="mb-2"
+                        />
                         <div>
                             <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Nama Role</label>
                             <input
@@ -320,6 +336,13 @@ const toggleGroup = (form, groupPermissions) => {
                     </div>
 
                     <form @submit.prevent="submitEdit" class="mt-4 space-y-4 text-xs">
+                        <Alert
+                            v-if="editForm.hasErrors"
+                            type="error"
+                            title="Periksa Isian Role"
+                            description="Terdapat kendala pada data role. Mohon periksa kembali kolom bertanda merah."
+                            class="mb-2"
+                        />
                         <div>
                             <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Nama Role</label>
                             <input
