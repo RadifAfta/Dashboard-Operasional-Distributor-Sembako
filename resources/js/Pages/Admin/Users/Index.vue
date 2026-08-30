@@ -165,6 +165,7 @@ const handleRoleFilter = (e) => {
                 :selectable="true"
                 v-model:selectedItems="selectedUsers"
                 searchPlaceholder="Cari nama atau email pengguna..."
+                export-file-name="daftar_pengguna_sistem"
             >
                 <!-- Filters Slot: Role Dropdown -->
                 <template #filters>
@@ -172,11 +173,11 @@ const handleRoleFilter = (e) => {
                         <select
                             :value="filters.role || ''"
                             @change="handleRoleFilter"
-                            class="py-2 px-3 text-xs bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-300"
+                            class="py-1.5 px-2.5 text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-slate-900 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-200"
                         >
-                            <option value="">Semua Role</option>
+                            <option value="">Semua Hak Akses (Role)</option>
                             <option v-for="r in roles" :key="r.id" :value="r.name">
-                                Role: {{ r.name }}
+                                {{ r.name }}
                             </option>
                         </select>
                     </div>
@@ -187,9 +188,9 @@ const handleRoleFilter = (e) => {
                     <button
                         type="button"
                         @click="openCreateModal"
-                        class="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 rounded-xl shadow-sm transition shadow-indigo-600/20"
+                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 rounded-lg shadow-2xs transition"
                     >
-                        <UserPlus class="w-4 h-4" />
+                        <UserPlus class="w-3.5 h-3.5" />
                         <span>Tambah Pengguna</span>
                     </button>
                 </template>
@@ -199,7 +200,7 @@ const handleRoleFilter = (e) => {
                     <button
                         type="button"
                         @click="showBulkDeleteModal = true"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-rose-600 bg-rose-50 border border-rose-200 rounded-lg hover:bg-rose-100 dark:bg-rose-950/40 dark:border-rose-900 dark:text-rose-400 transition"
+                        class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold text-rose-300 bg-rose-950/80 border border-rose-800 rounded-lg hover:bg-rose-900 hover:text-white transition"
                     >
                         <Trash2 class="w-3.5 h-3.5" />
                         <span>Hapus Terpilih</span>
