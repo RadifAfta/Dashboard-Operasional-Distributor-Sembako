@@ -201,121 +201,7 @@ const exportTableCSV = () => {
 
 <template>
     <div class="space-y-3 relative">
-        <!-- 1. Linear-Grade Precision Toolbar -->
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white p-3 rounded-xl border border-slate-200 dark:bg-[#0D121F] dark:border-slate-800/90 shadow-2xs">
-            <!-- Left: Search and Custom Filters Slot -->
-            <div class="flex flex-1 flex-wrap items-center gap-2.5">
-                <!-- Search Input -->
-                <div class="relative w-full sm:w-64">
-                    <Search class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
-                    <input
-                        v-model="search"
-                        type="text"
-                        :placeholder="searchPlaceholder"
-                        class="w-full pl-8 pr-7 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-slate-900 dark:bg-slate-900 dark:border-slate-800 dark:text-white dark:placeholder-slate-500 transition font-medium"
-                    />
-                    <button
-                        v-if="search"
-                        type="button"
-                        @click="search = ''"
-                        class="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5 rounded"
-                    >
-                        <X class="w-3 h-3" />
-                    </button>
-                </div>
-
-                <!-- Custom Filters Slot (e.g. Role filter, Status dropdown) -->
-                <slot name="filters" />
-
-                <!-- Reset Filter Quick Button (Shows if search active) -->
-                <button
-                    v-if="search || filters.role || filters.status"
-                    type="button"
-                    @click="resetFilters"
-                    class="inline-flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-white bg-slate-100 hover:bg-slate-200 rounded-lg dark:bg-slate-800 dark:text-slate-300 transition"
-                    title="Reset Filter"
-                >
-                    <RotateCcw class="w-3 h-3" />
-                    <span>Reset</span>
-                </button>
-            </div>
-
-            <!-- Right Toolbar: Table Controls & Actions -->
-            <div class="flex items-center gap-2 shrink-0">
-                <!-- View Density Toggle -->
-                <button
-                    type="button"
-                    @click="toggleDensity"
-                    class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-800 dark:hover:bg-slate-800 transition"
-                    :title="density === 'comfortable' ? 'Ganti ke Mode Padat (Compact)' : 'Ganti ke Mode Nyaman (Comfortable)'"
-                >
-                    <AlignJustify v-if="density === 'comfortable'" class="w-3.5 h-3.5 text-slate-400" />
-                    <Menu v-else class="w-3.5 h-3.5 text-indigo-500" />
-                    <span class="text-[11px] hidden md:inline">{{ density === 'comfortable' ? 'Nyaman' : 'Padat' }}</span>
-                </button>
-
-                <!-- Column Visibility Dropdown -->
-                <div class="relative">
-                    <button
-                        type="button"
-                        @click="showColumnDropdown = !showColumnDropdown"
-                        class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-800 dark:hover:bg-slate-800 transition"
-                        title="Atur Kolom"
-                    >
-                        <Columns class="w-3.5 h-3.5 text-slate-400" />
-                        <span class="text-[11px] hidden md:inline">Kolom</span>
-                    </button>
-
-                    <div
-                        v-if="showColumnDropdown"
-                        @click="showColumnDropdown = false"
-                        class="fixed inset-0 z-40"
-                    ></div>
-
-                    <div
-                        v-if="showColumnDropdown"
-                        class="absolute right-0 mt-1.5 w-48 p-2 bg-white border border-slate-200 rounded-xl shadow-xl dark:bg-[#0D121F] dark:border-slate-800 z-50 text-xs text-slate-700 dark:text-slate-300 animate-in fade-in zoom-in-95 duration-100"
-                    >
-                        <div class="px-2 py-1 text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 mb-1 border-b border-slate-100 dark:border-slate-800 pb-1.5">
-                            Visibilitas Kolom
-                        </div>
-                        <div class="space-y-1 max-h-48 overflow-y-auto custom-scrollbar">
-                            <label
-                                v-for="col in columns"
-                                :key="col.key"
-                                class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60 cursor-pointer text-xs select-none"
-                            >
-                                <input
-                                    type="checkbox"
-                                    :checked="visibleColumnKeys.includes(col.key)"
-                                    @change="toggleColumnVisibility(col.key)"
-                                    class="w-3.5 h-3.5 text-slate-900 border-slate-300 rounded focus:ring-0 dark:border-slate-700 dark:bg-slate-800"
-                                />
-                                <span class="truncate font-medium">{{ col.label }}</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Export CSV Button -->
-                <button
-                    type="button"
-                    @click="exportTableCSV"
-                    class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-800 dark:hover:bg-slate-800 transition"
-                    title="Ekspor CSV"
-                >
-                    <Download class="w-3.5 h-3.5 text-slate-400" />
-                    <span class="text-[11px] hidden md:inline">Ekspor</span>
-                </button>
-
-                <div class="h-4 w-px bg-slate-200 dark:bg-slate-800 hidden sm:block"></div>
-
-                <!-- Action Buttons Slot (e.g. Tambah Pengguna Baru) -->
-                <slot name="actions" />
-            </div>
-        </div>
-
-        <!-- 2. Floating Sleek Bulk Action Pill (When Rows Selected) -->
+        <!-- Floating Bulk Action Pill (When Rows Selected) -->
         <Transition
             enter-active-class="transition duration-200 ease-out"
             enter-from-class="opacity-0 -translate-y-2"
@@ -326,7 +212,7 @@ const exportTableCSV = () => {
         >
             <div
                 v-if="selectable && selectedItems.length > 0"
-                class="flex items-center justify-between px-4 py-2.5 bg-slate-900 text-white rounded-xl shadow-lg border border-slate-800 dark:bg-indigo-950/90 dark:border-indigo-800 text-xs font-medium"
+                class="flex items-center justify-between px-4 py-2.5 bg-slate-900 text-white rounded-xl shadow-lg border border-slate-800 dark:bg-slate-900 dark:border-slate-700 text-xs font-medium"
             >
                 <div class="flex items-center gap-2.5">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -348,12 +234,127 @@ const exportTableCSV = () => {
             </div>
         </Transition>
 
-        <!-- 3. Razor-Sharp Data Table Container -->
-        <div class="overflow-hidden bg-white border border-slate-200 rounded-xl dark:bg-[#0D121F] dark:border-slate-800/90 shadow-2xs">
+        <!-- Master Unified Enterprise Table Card -->
+        <div class="bg-white border border-slate-200/90 rounded-2xl dark:bg-[#0D121F] dark:border-slate-800/90 shadow-2xs overflow-hidden">
+            <!-- 1. Integrated Precision Toolbar Header -->
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3.5 sm:p-4 border-b border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-[#0D121F]">
+                <!-- Left: Search and Custom Filters Slot -->
+                <div class="flex flex-1 flex-wrap items-center gap-2.5">
+                    <!-- Search Input -->
+                    <div class="relative w-full sm:w-72">
+                        <Search class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
+                        <input
+                            v-model="search"
+                            type="text"
+                            :placeholder="searchPlaceholder"
+                            class="w-full pl-8 pr-7 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-900 dark:border-slate-800 dark:text-white dark:placeholder-slate-500 transition font-medium"
+                        />
+                        <button
+                            v-if="search"
+                            type="button"
+                            @click="search = ''"
+                            class="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5 rounded"
+                        >
+                            <X class="w-3 h-3" />
+                        </button>
+                    </div>
+
+                    <!-- Custom Filters Slot (e.g. Role filter, Status dropdown) -->
+                    <slot name="filters" />
+
+                    <!-- Reset Filter Quick Button (Shows if search active) -->
+                    <button
+                        v-if="search || filters.role || filters.status"
+                        type="button"
+                        @click="resetFilters"
+                        class="inline-flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-white bg-slate-100 hover:bg-slate-200 rounded-lg dark:bg-slate-800 dark:text-slate-300 transition"
+                        title="Reset Filter"
+                    >
+                        <RotateCcw class="w-3 h-3" />
+                        <span>Reset</span>
+                    </button>
+                </div>
+
+                <!-- Right Toolbar: Table Controls & Actions -->
+                <div class="flex items-center gap-2 shrink-0">
+                    <!-- View Density Toggle -->
+                    <button
+                        type="button"
+                        @click="toggleDensity"
+                        class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-800 dark:hover:bg-slate-800 transition"
+                        :title="density === 'comfortable' ? 'Ganti ke Mode Padat (Compact)' : 'Ganti ke Mode Nyaman (Comfortable)'"
+                    >
+                        <AlignJustify v-if="density === 'comfortable'" class="w-3.5 h-3.5 text-slate-400" />
+                        <Menu v-else class="w-3.5 h-3.5 text-brand" />
+                        <span class="text-[11px] hidden md:inline">{{ density === 'comfortable' ? 'Nyaman' : 'Padat' }}</span>
+                    </button>
+
+                    <!-- Column Visibility Dropdown -->
+                    <div class="relative">
+                        <button
+                            type="button"
+                            @click="showColumnDropdown = !showColumnDropdown"
+                            class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-800 dark:hover:bg-slate-800 transition"
+                            title="Atur Kolom"
+                        >
+                            <Columns class="w-3.5 h-3.5 text-slate-400" />
+                            <span class="text-[11px] hidden md:inline">Kolom</span>
+                        </button>
+
+                        <div
+                            v-if="showColumnDropdown"
+                            @click="showColumnDropdown = false"
+                            class="fixed inset-0 z-40"
+                        ></div>
+
+                        <div
+                            v-if="showColumnDropdown"
+                            class="absolute right-0 mt-1.5 w-48 p-2 bg-white border border-slate-200 rounded-xl shadow-xl dark:bg-[#0D121F] dark:border-slate-800 z-50 text-xs text-slate-700 dark:text-slate-300 animate-in fade-in zoom-in-95 duration-100"
+                        >
+                            <div class="px-2 py-1 text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 mb-1 border-b border-slate-100 dark:border-slate-800 pb-1.5">
+                                Visibilitas Kolom
+                            </div>
+                            <div class="space-y-1 max-h-48 overflow-y-auto custom-scrollbar">
+                                <label
+                                    v-for="col in columns"
+                                    :key="col.key"
+                                    class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/60 cursor-pointer text-xs select-none"
+                                >
+                                    <input
+                                        type="checkbox"
+                                        :checked="visibleColumnKeys.includes(col.key)"
+                                        @change="toggleColumnVisibility(col.key)"
+                                        class="w-3.5 h-3.5 text-slate-900 border-slate-300 rounded focus:ring-0 dark:border-slate-700 dark:bg-slate-800"
+                                    />
+                                    <span class="truncate font-medium">{{ col.label }}</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Export CSV Button -->
+                    <button
+                        type="button"
+                        @click="exportTableCSV"
+                        class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 dark:bg-slate-900 dark:text-slate-300 dark:border-slate-800 dark:hover:bg-slate-800 transition"
+                        title="Ekspor CSV"
+                    >
+                        <Download class="w-3.5 h-3.5 text-slate-400" />
+                        <span class="text-[11px] hidden md:inline">Ekspor</span>
+                    </button>
+
+                    <div class="h-4 w-px bg-slate-200 dark:bg-slate-800 hidden sm:block"></div>
+
+                    <!-- Action Buttons Slot (e.g. Tambah Pengguna Baru) -->
+                    <slot name="actions" />
+                </div>
+            </div>
+
+            <!-- 2. Razor-Sharp Data Table Body -->
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-xs text-slate-700 dark:text-slate-300">
-                    <!-- Thead: Crisp Technical Monospaced Headers -->
-                    <thead class="bg-slate-50/90 dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-800 text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 select-none">
+                    <!-- Thead: Crisp Modern Headers -->
+                    <thead class="bg-slate-50/90 dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-800 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 select-none">
                         <tr>
                             <!-- Select All Checkbox -->
                             <th v-if="selectable" class="w-9 px-3.5 py-3 text-center">
@@ -361,7 +362,7 @@ const exportTableCSV = () => {
                                     type="checkbox"
                                     :checked="isAllSelected()"
                                     @change="toggleSelectAll"
-                                    class="w-3.5 h-3.5 text-slate-900 border-slate-300 rounded focus:ring-0 dark:border-slate-700 dark:bg-slate-800 cursor-pointer"
+                                    class="w-3.5 h-3.5 text-brand border-slate-300 rounded focus:ring-brand dark:border-slate-700 dark:bg-slate-800 cursor-pointer"
                                 />
                             </th>
 
@@ -379,8 +380,8 @@ const exportTableCSV = () => {
                                 <div class="flex items-center gap-1.5">
                                     <span>{{ col.label }}</span>
                                     <span v-if="col.sortable" class="text-slate-400">
-                                        <ArrowUp v-if="filters.sort_field === col.key && filters.sort_direction === 'asc'" class="w-3 h-3 text-indigo-600 dark:text-indigo-400" />
-                                        <ArrowDown v-else-if="filters.sort_field === col.key && filters.sort_direction === 'desc'" class="w-3 h-3 text-indigo-600 dark:text-indigo-400" />
+                                        <ArrowUp v-if="filters.sort_field === col.key && filters.sort_direction === 'asc'" class="w-3 h-3 text-brand" />
+                                        <ArrowDown v-else-if="filters.sort_field === col.key && filters.sort_direction === 'desc'" class="w-3 h-3 text-brand" />
                                         <ArrowUpDown v-else class="w-3 h-3 opacity-30 hover:opacity-100" />
                                     </span>
                                 </div>
@@ -401,7 +402,7 @@ const exportTableCSV = () => {
                             :class="[
                                 'transition-colors hover:bg-slate-50/70 dark:hover:bg-slate-800/30',
                                 selectable && selectedItems.includes(row.id)
-                                    ? 'bg-indigo-50/30 dark:bg-indigo-950/20 border-l-2 border-l-indigo-600'
+                                    ? 'bg-brand/5 dark:bg-brand/10 border-l-2 border-l-brand'
                                     : ''
                             ]"
                         >
@@ -417,7 +418,7 @@ const exportTableCSV = () => {
                                     type="checkbox"
                                     :checked="selectedItems.includes(row.id)"
                                     @change="toggleItem(row.id)"
-                                    class="w-3.5 h-3.5 text-slate-900 border-slate-300 rounded focus:ring-0 dark:border-slate-700 dark:bg-slate-800 cursor-pointer"
+                                    class="w-3.5 h-3.5 text-brand border-slate-300 rounded focus:ring-brand dark:border-slate-700 dark:bg-slate-800 cursor-pointer"
                                 />
                             </td>
 
@@ -485,7 +486,7 @@ const exportTableCSV = () => {
             <!-- 4. Executive Pagination Footer -->
             <div
                 v-if="pagination.total > 0"
-                class="flex flex-col sm:flex-row sm:items-center sm:justify-between px-4 py-2.5 border-t border-slate-200 bg-slate-50/50 text-[11px] text-slate-500 dark:bg-slate-900/50 dark:border-slate-800 dark:text-slate-400 gap-3 font-mono"
+                class="flex flex-col sm:flex-row sm:items-center sm:justify-between px-4 py-2.5 border-t border-slate-200/80 bg-slate-50/50 text-[11px] text-slate-500 dark:bg-slate-900/50 dark:border-slate-800 dark:text-slate-400 gap-3 font-sans"
             >
                 <div class="flex items-center gap-2">
                     <span>
@@ -500,7 +501,7 @@ const exportTableCSV = () => {
                         <select
                             :value="perPage"
                             @change="handlePerPageChange"
-                            class="py-0.5 px-1.5 text-[11px] font-mono bg-white border border-slate-200 rounded focus:ring-0 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300"
+                            class="py-0.5 pl-2 pr-6 text-xs font-medium bg-white border border-slate-200 rounded-md focus:ring-0 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300"
                         >
                             <option :value="10">10</option>
                             <option :value="25">25</option>
