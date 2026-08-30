@@ -1,0 +1,48 @@
+<?php
+
+namespace App\Http\Requests\Admin;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class {{modelName}}Request extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        $id = $this->route('{{variableNameSingular}}')?->id ?? $this->route('id');
+
+        return [
+            'name' => ['required', 'string', 'max:255'],
+            'code' => ['required', 'string', 'max:50', 'unique:{{tableName}},code,' . $id],
+            'status' => ['required', 'in:active,inactive'],
+            'description' => ['nullable', 'string', 'max:1000'],
+        ];
+    }
+
+    /**
+     * Custom attributes for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'name' => 'Nama {{humanName}}',
+            'code' => 'Kode {{humanName}}',
+            'status' => 'Status',
+            'description' => 'Deskripsi',
+        ];
+    }
+}

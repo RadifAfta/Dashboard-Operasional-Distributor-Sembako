@@ -1,0 +1,430 @@
+<script setup>
+import { ref } from 'vue';
+import { Head, useForm, router } from '@inertiajs/vue3';
+import AdminLayout from '@/Layouts/AdminLayout.vue';
+import DataTable from '@/Components/Admin/DataTable.vue';
+import Badge from '@/Components/Admin/Badge.vue';
+import Alert from '@/Components/Admin/Alert.vue';
+import ConfirmationModal from '@/Components/Admin/ConfirmationModal.vue';
+import { Plus, Edit2, Trash2, X } from 'lucide-vue-next';
+
+const props = defineProps({
+    items: {
+        type: Object,
+        required: true,
+    },
+    filters: {
+        type: Object,
+        default: () => ({}),
+    },
+});
+
+const columns = [
+    { key: 'code', label: 'Kode', sortable: true },
+    { key: 'name', label: 'Nama {{humanName}}', sortable: true },
+    { key: 'status', label: 'Status', sortable: true },
+    { key: 'description', label: 'Keterangan', sortable: false },
+    { key: 'created_at', label: 'Tanggal Dibuat', sortable: true },
+];
+
+// Modal States
+const showCreateModal = ref(false);
+const showEditModal = ref(false);
+const showDeleteModal = ref(false);
+const showBulkDeleteModal = ref(false);
+
+const selectedItem = ref(null);
+const selectedIds = ref([]);
+
+// Create Form
+const createForm = useForm({
+    name: '',
+    code: '',
+    status: 'active',
+    description: '',
+});
+
+// Edit Form
+const editForm = useForm({
+    name: '',
+    code: '',
+    status: 'active',
+    description: '',
+});
+
+const openCreateModal = () => {
+    createForm.reset();
+    createForm.clearErrors();
+    showCreateModal.value = true;
+};
+
+const submitCreate = () => {
+    createForm.post(route('admin.{{routePrefix}}.store'), {
+        preserveScroll: true,
+        onSuccess: () => {
+            showCreateModal.value = false;
+            createForm.reset();
+        },
+    });
+};
+
+const openEditModal = (item) => {
+    selectedItem.value = item;
+    editForm.name = item.name;
+    editForm.code = item.code;
+    editForm.status = item.status;
+    editForm.description = item.description || '';
+    editForm.clearErrors();
+    showEditModal.value = true;
+};
+
+const submitEdit = () => {
+    if (!selectedItem.value) return;
+
+    editForm.put(route('admin.{{routePrefix}}.update', selectedItem.value.id), {
+        preserveScroll: true,
+        onSuccess: () => {
+            showEditModal.value = false;
+            selectedItem.value = null;
+        },
+    });
+};
+
+const confirmDelete = (item) => {
+    selectedItem.value = item;
+    showDeleteModal.value = true;
+};
+
+const submitDelete = () => {
+    if (!selectedItem.value) return;
+
+    router.delete(route('admin.{{routePrefix}}.destroy', selectedItem.value.id), {
+        preserveScroll: true,
+        onSuccess: () => {
+            showDeleteModal.value = false;
+            selectedItem.value = null;
+        },
+    });
+};
+
+const onSelectionChange = (ids) => {
+    selectedIds.value = ids;
+};
+
+const submitBulkDelete = () => {
+    if (selectedIds.value.length === 0) return;
+
+    router.post(route('admin.{{routePrefix}}.bulk-destroy'), { ids: selectedIds.value }, {
+        preserveScroll: true,
+        onSuccess: () => {
+            showBulkDeleteModal.value = false;
+            selectedIds.value = [];
+        },
+    });
+};
+</script>
+
+<template>
+    <AdminLayout title="Manajemen {{humanName}}">
+        <Head title="Manajemen {{humanName}}" />
+
+        <div class="space-y-5">
+            <!-- Header Page -->
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <h2 class="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+                        Manajemen {{humanName}}
+                    </h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                        Kelola data master {{humanNameLowerCase}}, kode identitas, dan status operasional sistem.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Master Unified Data Table -->
+            <DataTable
+                :rows="items.data"
+                :columns="columns"
+                :pagination="items"
+                :selectable="true"
+                search-placeholder="Cari nama, kode, atau keterangan..."
+                export-file-name="data_{{routePrefix}}"
+                @selection-change="onSelectionChange"
+            >
+                <!-- Actions Slot: Add Button in Table Toolbar -->
+                <template #actions>
+                    <button
+                        type="button"
+                        @click="openCreateModal"
+                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-brand hover:opacity-90 rounded-lg shadow-2xs transition"
+                    >
+                        <Plus class="w-3.5 h-3.5" />
+                        <span>Tambah {{humanName}}</span>
+                    </button>
+                </template>
+
+                <!-- Bulk Actions Toolbar -->
+                <template #bulk-actions>
+                    <button
+                        type="button"
+                        @click="showBulkDeleteModal = true"
+                        class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold text-rose-300 bg-rose-950/80 border border-rose-800 rounded-lg hover:bg-rose-900 hover:text-white transition"
+                    >
+                        <Trash2 class="w-3.5 h-3.5" />
+                        <span>Hapus Terpilih ({{ selectedIds.length }})</span>
+                    </button>
+                </template>
+
+                <!-- Code Cell: Clean Pill -->
+                <template #cell(code)="{ value }">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-md font-mono text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80">
+                        {{ value }}
+                    </span>
+                </template>
+
+                <!-- Name Cell: Bold with High Contrast -->
+                <template #cell(name)="{ value }">
+                    <span class="font-bold text-xs text-slate-900 dark:text-white">
+                        {{ value }}
+                    </span>
+                </template>
+
+                <!-- Description Cell: Fallback Dash -->
+                <template #cell(description)="{ value }">
+                    <span class="text-xs text-slate-500 dark:text-slate-400">
+                        {{ value || '—' }}
+                    </span>
+                </template>
+
+                <!-- Status Badge Cell -->
+                <template #cell(status)="{ value }">
+                    <Badge :variant="value === 'active' ? 'success' : 'neutral'" size="sm">
+                        {{ value === 'active' ? 'Aktif' : 'Non-Aktif' }}
+                    </Badge>
+                </template>
+
+                <!-- Date Cell -->
+                <template #cell(created_at)="{ value }">
+                    <span class="text-xs font-mono text-slate-500 dark:text-slate-400">
+                        {{ new Date(value).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) }}
+                    </span>
+                </template>
+
+                <!-- Row Action Buttons: Button Group with Hover Pill -->
+                <template #rowActions="{ row }">
+                    <div class="flex items-center justify-end gap-1">
+                        <button
+                            type="button"
+                            @click="openEditModal(row)"
+                            class="inline-flex items-center justify-center w-7 h-7 text-slate-400 hover:text-brand hover:bg-brand/10 dark:hover:bg-brand/20 rounded-lg transition"
+                            title="Edit Data"
+                        >
+                            <Edit2 class="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                            type="button"
+                            @click="confirmDelete(row)"
+                            class="inline-flex items-center justify-center w-7 h-7 text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition"
+                            title="Hapus Data"
+                        >
+                            <Trash2 class="w-3.5 h-3.5" />
+                        </button>
+                    </div>
+                </template>
+            </DataTable>
+        </div>
+
+        <!-- Modal Tambah Data -->
+        <Teleport to="body">
+            <div
+                v-if="showCreateModal"
+                class="fixed inset-0 z-50 overflow-y-auto bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4"
+                @click.self="showCreateModal = false"
+            >
+                <div class="relative w-full max-w-lg p-6 bg-white rounded-2xl shadow-2xl border border-slate-200 dark:bg-slate-900 dark:border-slate-800">
+                    <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+                        <h3 class="text-base font-bold text-slate-900 dark:text-white">Tambah {{humanName}} Baru</h3>
+                        <button @click="showCreateModal = false" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
+                            <X class="w-4 h-4" />
+                        </button>
+                    </div>
+
+                    <form @submit.prevent="submitCreate" class="mt-4 space-y-4 text-xs">
+                        <Alert
+                            v-if="createForm.hasErrors"
+                            type="error"
+                            title="Periksa Isian"
+                            description="Terdapat isian yang belum sesuai. Mohon periksa kembali formulir."
+                            class="mb-2"
+                        />
+
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Kode Unik *</label>
+                            <input
+                                v-model="createForm.code"
+                                type="text"
+                                required
+                                placeholder="Contoh: {{codeExample}}"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white uppercase font-mono"
+                            />
+                            <p v-if="createForm.errors.code" class="mt-1 text-rose-500 font-medium">{{ createForm.errors.code }}</p>
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Nama {{humanName}} *</label>
+                            <input
+                                v-model="createForm.name"
+                                type="text"
+                                required
+                                placeholder="Masukkan nama..."
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                            />
+                            <p v-if="createForm.errors.name" class="mt-1 text-rose-500 font-medium">{{ createForm.errors.name }}</p>
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Status Operasional *</label>
+                            <select
+                                v-model="createForm.status"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                            >
+                                <option value="active">Aktif</option>
+                                <option value="inactive">Non-Aktif</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Keterangan / Catatan</label>
+                            <textarea
+                                v-model="createForm.description"
+                                rows="3"
+                                placeholder="Tambahkan catatan tambahan jika diperlukan..."
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                            ></textarea>
+                        </div>
+
+                        <div class="pt-4 flex justify-end gap-3 border-t border-slate-100 dark:border-slate-800">
+                            <button
+                                type="button"
+                                @click="showCreateModal = false"
+                                class="px-4 py-2 text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl dark:bg-slate-800 dark:text-slate-300 font-semibold"
+                            >
+                                Batal
+                            </button>
+                            <button
+                                type="submit"
+                                :disabled="createForm.processing"
+                                class="px-4 py-2 text-white bg-brand hover:opacity-90 rounded-xl font-semibold disabled:opacity-50"
+                            >
+                                Simpan Data
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </Teleport>
+
+        <!-- Modal Edit Data -->
+        <Teleport to="body">
+            <div
+                v-if="showEditModal"
+                class="fixed inset-0 z-50 overflow-y-auto bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4"
+                @click.self="showEditModal = false"
+            >
+                <div class="relative w-full max-w-lg p-6 bg-white rounded-2xl shadow-2xl border border-slate-200 dark:bg-slate-900 dark:border-slate-800">
+                    <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+                        <h3 class="text-base font-bold text-slate-900 dark:text-white">Edit Data {{humanName}}</h3>
+                        <button @click="showEditModal = false" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
+                            <X class="w-4 h-4" />
+                        </button>
+                    </div>
+
+                    <form @submit.prevent="submitEdit" class="mt-4 space-y-4 text-xs">
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Kode Unik *</label>
+                            <input
+                                v-model="editForm.code"
+                                type="text"
+                                required
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white uppercase font-mono"
+                            />
+                            <p v-if="editForm.errors.code" class="mt-1 text-rose-500 font-medium">{{ editForm.errors.code }}</p>
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Nama {{humanName}} *</label>
+                            <input
+                                v-model="editForm.name"
+                                type="text"
+                                required
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                            />
+                            <p v-if="editForm.errors.name" class="mt-1 text-rose-500 font-medium">{{ editForm.errors.name }}</p>
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Status Operasional *</label>
+                            <select
+                                v-model="editForm.status"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                            >
+                                <option value="active">Aktif</option>
+                                <option value="inactive">Non-Aktif</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Keterangan / Catatan</label>
+                            <textarea
+                                v-model="editForm.description"
+                                rows="3"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                            ></textarea>
+                        </div>
+
+                        <div class="pt-4 flex justify-end gap-3 border-t border-slate-100 dark:border-slate-800">
+                            <button
+                                type="button"
+                                @click="showEditModal = false"
+                                class="px-4 py-2 text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl dark:bg-slate-800 dark:text-slate-300 font-semibold"
+                            >
+                                Batal
+                            </button>
+                            <button
+                                type="submit"
+                                :disabled="editForm.processing"
+                                class="px-4 py-2 text-white bg-brand hover:opacity-90 rounded-xl font-semibold disabled:opacity-50"
+                            >
+                                Perbarui Data
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </Teleport>
+
+        <!-- Modal Konfirmasi Hapus Satuan -->
+        <ConfirmationModal
+            :show="showDeleteModal"
+            title="Konfirmasi Hapus {{humanName}}"
+            :message="`Apakah Anda yakin ingin menghapus data '${selectedItem?.name}'? Tindakan ini tidak dapat dibatalkan.`"
+            confirm-text="Ya, Hapus Data"
+            cancel-text="Batal"
+            variant="danger"
+            @close="showDeleteModal = false"
+            @confirm="submitDelete"
+        />
+
+        <!-- Modal Konfirmasi Hapus Massal -->
+        <ConfirmationModal
+            :show="showBulkDeleteModal"
+            title="Konfirmasi Hapus Massal"
+            :message="`Apakah Anda yakin ingin menghapus ${selectedIds.length} data terpilih sekaligus?`"
+            confirm-text="Hapus Semua Terpilih"
+            cancel-text="Batal"
+            variant="danger"
+            @close="showBulkDeleteModal = false"
+            @confirm="submitBulkDelete"
+        />
+    </AdminLayout>
+</template>

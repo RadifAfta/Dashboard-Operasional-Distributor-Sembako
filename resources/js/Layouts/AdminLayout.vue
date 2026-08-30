@@ -21,6 +21,16 @@ import {
     CheckCircle2,
     ExternalLink,
     Terminal,
+    Package,
+    Folder,
+    Tag,
+    ShoppingBag,
+    Layers,
+    Briefcase,
+    FileText,
+    Database,
+    Calendar,
+    Boxes,
 } from 'lucide-vue-next';
 
 import { applyBrandTheme } from '@/Utils/brandTheme';
@@ -145,6 +155,17 @@ const iconMap = {
     Shield,
     Settings,
     Sliders,
+    Package,
+    Folder,
+    Tag,
+    ShoppingBag,
+    Layers,
+    Briefcase,
+    FileText,
+    Database,
+    Calendar,
+    Boxes,
+    Building2,
 };
 
 const resolveIcon = (iconName) => {
