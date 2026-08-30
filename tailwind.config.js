@@ -16,6 +16,14 @@ export default {
             fontFamily: {
                 sans: ['"Plus Jakarta Sans"', ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                brand: {
+                    DEFAULT: 'rgb(var(--brand-primary, 79 70 229) / <alpha-value>)',
+                    hover: 'rgb(var(--brand-primary-hover, 67 56 202) / <alpha-value>)',
+                    light: 'var(--brand-light)',
+                    border: 'var(--brand-border)',
+                },
+            },
         },
     },
 

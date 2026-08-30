@@ -35,6 +35,13 @@ class SettingSeeder extends Seeder
                 'description' => 'Email kontak utama sistem',
             ],
             [
+                'key' => 'brand_color',
+                'value' => 'indigo',
+                'group' => 'general',
+                'type' => 'text',
+                'description' => 'Warna tema aksen identitas perusahaan klien',
+            ],
+            [
                 'key' => 'enable_registration',
                 'value' => '1',
                 'group' => 'security',

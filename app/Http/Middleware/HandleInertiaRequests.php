@@ -84,6 +84,7 @@ class HandleInertiaRequests extends Middleware
                 'name' => Setting::get('app_name', config('app.name', 'AdminHub')),
                 'description' => Setting::get('app_description', ''),
                 'currency_symbol' => Setting::get('currency_symbol', 'Rp'),
+                'brand_color' => Setting::get('brand_color', 'indigo'),
             ],
         ];
     }
