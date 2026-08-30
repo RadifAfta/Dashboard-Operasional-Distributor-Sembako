@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed, onUnmounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { Link, usePage, router } from '@inertiajs/vue3';
 import Toast from '@/Components/Admin/Toast.vue';
 import CommandPalette from '@/Components/Admin/CommandPalette.vue';
@@ -23,10 +23,17 @@ import {
     Terminal,
 } from 'lucide-vue-next';
 
+import { applyBrandTheme } from '@/Utils/brandTheme';
+import { watch } from 'vue';
+
 const props = defineProps({
     title: {
         type: String,
         default: 'Operations Hub',
+    },
+    description: {
+        type: String,
+        default: '',
     },
     breadcrumbs: {
         type: Array,
@@ -37,7 +44,16 @@ const props = defineProps({
 const page = usePage();
 const user = computed(() => page.props.auth?.user);
 const menuItems = computed(() => page.props.adminMenu || []);
-const appSettings = computed(() => page.props.appSettings || { name: 'AdminHub Enterprise' });
+const appSettings = computed(() => page.props.appSettings || { name: 'AdminHub Enterprise', brand_color: 'indigo' });
+
+// Watch brand color setting and apply theme
+watch(
+    () => appSettings.value?.brand_color,
+    (newColor) => {
+        applyBrandTheme(newColor || 'indigo');
+    },
+    { immediate: true }
+);
 
 // Dynamic Breadcrumb Resolver based on adminMenu groups and active routes
 const resolvedBreadcrumbs = computed(() => {
@@ -60,13 +76,11 @@ const resolvedBreadcrumbs = computed(() => {
         } else {
             const activeChild = item.children.find((child) => child.active && isRouteActive(child.active));
             if (activeChild) {
-                // Parent group
                 crumbs.push({
                     title: item.title,
                     url: null,
                     isCurrent: false,
                 });
-                // Child route
                 crumbs.push({
                     title: activeChild.title,
                     url: activeChild.route ? route(activeChild.route) : null,
@@ -169,7 +183,8 @@ const logout = () => {
 </script>
 
 <template>
-    <div class="min-h-screen bg-slate-100/70 text-slate-900 dark:bg-[#090D16] dark:text-slate-100 bg-dot-matrix font-sans antialiased flex flex-col selection:bg-slate-900 selection:text-white dark:selection:bg-slate-100 dark:selection:text-slate-900">
+    <!-- Outer Viewport Ambient Background Canvas with Studio Frame Inset -->
+    <div class="h-screen w-screen overflow-hidden ambient-canvas p-2 sm:p-3 lg:p-3.5 font-sans antialiased text-slate-900 dark:text-slate-100 selection:bg-indigo-600 selection:text-white flex flex-col">
         <!-- Toast Notification Container -->
         <Toast />
 
@@ -187,332 +202,323 @@ const logout = () => {
             class="fixed inset-0 z-40 bg-slate-950/70 backdrop-blur-xs lg:hidden transition-opacity"
         ></div>
 
-        <!-- B2B SaaS Minimalist Sidebar -->
-        <aside
-            :class="[
-                'fixed top-0 bottom-0 left-0 z-50 flex flex-col bg-white border-r border-slate-200 dark:bg-[#0D121F] dark:border-slate-800/80 transition-all duration-200 ease-in-out',
-                sidebarCollapsed ? 'lg:w-16' : 'lg:w-64',
-                sidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full lg:translate-x-0'
-            ]"
-        >
-            <!-- Organization / Workspace Switcher -->
-            <div class="flex items-center justify-between h-16 px-4 border-b border-slate-200 dark:border-slate-800/80">
-                <div class="flex items-center gap-3 overflow-hidden">
-                    <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-black text-sm tracking-wider shrink-0 shadow-xs">
-                        {{ appSettings.name.charAt(0) }}
-                    </div>
-                    <div v-show="!sidebarCollapsed" class="flex flex-col truncate">
-                        <div class="flex items-center gap-1.5">
+        <!-- 🖥️ KONSEP 3: The Unified Studio App Window Shell -->
+        <div class="flex-1 w-full h-full rounded-2xl border border-slate-300 dark:border-slate-800 shadow-2xl overflow-hidden flex flex-row bg-white dark:bg-[#070A12] relative">
+            
+            <!-- Left Studio Pane: Sidebar (Seamless Light & Dark Adaptation) -->
+            <aside
+                :class="[
+                    'flex flex-col bg-slate-50 text-slate-800 border-r border-slate-200/90 dark:bg-[#0A0E18] dark:text-white dark:border-slate-800/80 h-full transition-all duration-200 ease-in-out shrink-0 z-30',
+                    sidebarCollapsed ? 'w-16' : 'w-60',
+                    sidebarOpen ? 'fixed inset-y-0 left-0 z-50 w-64 shadow-2xl' : 'hidden lg:flex'
+                ]"
+            >
+                <!-- Workspace Header -->
+                <div class="flex items-center justify-between h-14 px-3.5 border-b border-slate-200 dark:border-slate-800/80">
+                    <div class="flex items-center gap-2.5 overflow-hidden">
+                        <div class="flex items-center justify-center w-7 h-7 rounded-lg bg-brand text-white font-black text-xs tracking-wider shrink-0 shadow-sm">
+                            {{ appSettings.name.charAt(0) }}
+                        </div>
+                        <div v-show="!sidebarCollapsed" class="flex flex-col truncate">
                             <span class="font-bold text-xs tracking-tight text-slate-900 dark:text-white truncate">
                                 {{ appSettings.name }}
                             </span>
-                            <span class="px-1.5 py-0.2 text-[9px] font-mono font-bold uppercase rounded bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-400 dark:border-emerald-800">
-                                PROD
+                            <span class="text-[10px] font-mono text-slate-400 dark:text-slate-400 truncate">
+                                Enterprise Console
                             </span>
                         </div>
-                        <span class="text-[11px] font-medium text-slate-400 dark:text-slate-500 truncate">
-                            Enterprise Operations
-                        </span>
                     </div>
-                </div>
 
-                <button
-                    @click="sidebarOpen = false"
-                    class="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 lg:hidden rounded-md"
-                >
-                    <X class="w-4 h-4" />
-                </button>
-            </div>
-
-            <!-- Navigation Links -->
-            <div class="flex-1 px-3 py-4 space-y-1 overflow-y-auto custom-scrollbar">
-                <div v-if="!sidebarCollapsed" class="px-2.5 pb-1 text-[10px] font-mono uppercase tracking-widest text-slate-400 dark:text-slate-500 font-semibold">
-                    Navigation
-                </div>
-
-                <div v-for="(item, index) in menuItems" :key="index">
-                    <!-- Standard Menu Item -->
-                    <Link
-                        v-if="!item.children"
-                        :href="route(item.route)"
-                        :class="[
-                            'flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold transition-colors duration-150',
-                            isRouteActive(item.active)
-                                ? 'bg-slate-900 text-white dark:bg-slate-800 dark:text-white'
-                                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800/60'
-                        ]"
+                    <button
+                        @click="sidebarOpen = false"
+                        class="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-white lg:hidden rounded-md"
                     >
-                        <component
-                            :is="resolveIcon(item.icon)"
-                            :class="[
-                                'w-4 h-4 shrink-0',
-                                isRouteActive(item.active) ? 'text-white' : 'text-slate-400'
-                            ]"
-                        />
-                        <span v-show="!sidebarCollapsed" class="truncate">{{ item.title }}</span>
-                        <span
-                            v-if="item.badge && !sidebarCollapsed"
-                            class="ml-auto px-1.5 py-0.5 text-[10px] font-mono font-bold rounded bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
-                        >
-                            {{ item.badge }}
-                        </span>
-                    </Link>
+                        <X class="w-4 h-4" />
+                    </button>
+                </div>
 
-                    <!-- Submenu Group -->
-                    <div v-else class="space-y-0.5">
-                        <button
-                            type="button"
-                            @click="toggleSubmenu(index)"
+                <!-- Navigation Links -->
+                <div class="flex-1 px-2.5 py-3 space-y-1 overflow-y-auto custom-scrollbar">
+                    <div v-if="!sidebarCollapsed" class="px-2 pb-1 text-[10px] font-mono uppercase tracking-widest text-slate-400 dark:text-slate-500 font-semibold">
+                        Workspace
+                    </div>
+
+                    <div v-for="(item, index) in menuItems" :key="index">
+                        <!-- Standard Menu Item -->
+                        <Link
+                            v-if="!item.children"
+                            :href="route(item.route)"
                             :class="[
-                                'w-full flex items-center justify-between gap-3 px-3 py-2 rounded-lg text-xs font-semibold transition-colors duration-150',
-                                isParentActive(item)
-                                    ? 'text-slate-900 font-bold dark:text-white'
-                                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800/60'
+                                'flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-semibold transition-colors duration-150',
+                                isRouteActive(item.active)
+                                    ? 'bg-brand text-white shadow-xs'
+                                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800/60'
                             ]"
                         >
-                            <div class="flex items-center gap-3 truncate">
-                                <component
-                                    :is="resolveIcon(item.icon)"
-                                    :class="[
-                                        'w-4 h-4 shrink-0',
-                                        isParentActive(item) ? 'text-slate-900 dark:text-white' : 'text-slate-400'
-                                    ]"
-                                />
-                                <span v-show="!sidebarCollapsed" class="truncate">{{ item.title }}</span>
-                            </div>
-                            <ChevronDown
-                                v-show="!sidebarCollapsed"
+                            <component
+                                :is="resolveIcon(item.icon)"
                                 :class="[
-                                    'w-3.5 h-3.5 transition-transform duration-150 shrink-0 text-slate-400',
-                                    openSubmenus[index] ? 'rotate-180' : ''
+                                    'w-4 h-4 shrink-0',
+                                    isRouteActive(item.active) ? 'text-white' : 'text-slate-400'
                                 ]"
                             />
-                        </button>
+                            <span v-show="!sidebarCollapsed" class="truncate">{{ item.title }}</span>
+                            <span
+                                v-if="item.badge && !sidebarCollapsed"
+                                class="ml-auto px-1.5 py-0.5 text-[10px] font-mono font-bold rounded bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
+                            >
+                                {{ item.badge }}
+                            </span>
+                        </Link>
 
-                        <!-- Children -->
-                        <div
-                            v-show="openSubmenus[index] && !sidebarCollapsed"
-                            class="pl-7 pr-1 py-0.5 space-y-0.5 border-l border-slate-200 dark:border-slate-800 ml-4"
-                        >
-                            <Link
-                                v-for="(child, childIdx) in item.children"
-                                :key="childIdx"
-                                :href="route(child.route)"
+                        <!-- Submenu Group -->
+                        <div v-else class="space-y-0.5">
+                            <button
+                                type="button"
+                                @click="toggleSubmenu(index)"
                                 :class="[
-                                    'flex items-center px-2.5 py-1.5 rounded-md text-[11px] font-medium transition-colors',
-                                    isRouteActive(child.active)
-                                        ? 'bg-slate-100 text-slate-900 font-bold dark:bg-slate-800/80 dark:text-white'
-                                        : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800/40'
+                                    'w-full flex items-center justify-between gap-2.5 px-2.5 py-2 rounded-lg text-xs font-semibold transition-colors duration-150',
+                                    isParentActive(item)
+                                        ? 'text-slate-900 dark:text-white font-bold bg-slate-200/40 dark:bg-transparent'
+                                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800/60'
                                 ]"
                             >
-                                <span class="truncate">{{ child.title }}</span>
-                            </Link>
+                                <div class="flex items-center gap-2.5 truncate">
+                                    <component
+                                        :is="resolveIcon(item.icon)"
+                                        :class="[
+                                            'w-4 h-4 shrink-0',
+                                            isParentActive(item) ? 'text-brand' : 'text-slate-400'
+                                        ]"
+                                    />
+                                    <span v-show="!sidebarCollapsed" class="truncate">{{ item.title }}</span>
+                                </div>
+                                <ChevronDown
+                                    v-show="!sidebarCollapsed"
+                                    :class="[
+                                        'w-3.5 h-3.5 transition-transform duration-150 shrink-0 text-slate-400',
+                                        openSubmenus[index] ? 'rotate-180' : ''
+                                    ]"
+                                />
+                            </button>
+
+                            <!-- Children -->
+                            <div
+                                v-show="openSubmenus[index] && !sidebarCollapsed"
+                                class="pl-6 pr-1 py-0.5 space-y-0.5 border-l border-slate-200 dark:border-slate-800 ml-3.5"
+                            >
+                                <Link
+                                    v-for="(child, childIdx) in item.children"
+                                    :key="childIdx"
+                                    :href="route(child.route)"
+                                    :class="[
+                                        'flex items-center px-2 py-1.5 rounded-md text-[11px] font-medium transition-colors',
+                                        isRouteActive(child.active)
+                                            ? 'bg-brand/10 text-brand font-bold border border-brand/20 dark:bg-brand/20 dark:text-white dark:border-brand/40'
+                                            : 'text-slate-500 hover:text-slate-900 hover:bg-slate-200/50 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800/40'
+                                    ]"
+                                >
+                                    <span class="truncate">{{ child.title }}</span>
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Sidebar Footer: System Status & User Info -->
-            <div class="p-3 border-t border-slate-200 dark:border-slate-800/80">
-                <div class="flex items-center justify-between p-2 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/50">
-                    <div class="flex items-center gap-2.5 overflow-hidden">
-                        <img
-                            :src="user?.avatar_url || 'https://ui-avatars.com/api/?name=Admin'"
-                            alt="Avatar"
-                            class="w-7 h-7 rounded-md object-cover ring-1 ring-slate-300 dark:ring-slate-700 shrink-0"
-                        />
-                        <div v-show="!sidebarCollapsed" class="flex flex-col truncate">
-                            <span class="text-xs font-bold text-slate-900 dark:text-white truncate">{{ user?.name }}</span>
-                            <span class="text-[10px] font-mono text-slate-400 truncate">{{ user?.roles?.[0] || 'User' }}</span>
-                        </div>
-                    </div>
-
-                    <button
-                        v-show="!sidebarCollapsed"
-                        type="button"
-                        @click="logout"
-                        title="Sign Out"
-                        class="p-1.5 text-slate-400 hover:text-rose-600 rounded-md hover:bg-white dark:hover:bg-slate-800 transition"
-                    >
-                        <LogOut class="w-3.5 h-3.5" />
-                    </button>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Main Body Wrapper -->
-        <div
-            :class="[
-                'flex-1 flex flex-col transition-all duration-200 ease-in-out',
-                sidebarCollapsed ? 'lg:pl-16' : 'lg:pl-64'
-            ]"
-        >
-            <!-- Top Navbar (Precision Stripe Style) -->
-            <header class="sticky top-0 z-30 flex items-center justify-between h-16 px-4 sm:px-8 bg-white/95 backdrop-blur-md border-b border-slate-200 dark:bg-[#0B0F19]/95 dark:border-slate-800">
-                <div class="flex items-center gap-3">
-                    <button
-                        type="button"
-                        @click="sidebarOpen = true"
-                        class="p-1.5 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white lg:hidden rounded-lg"
-                    >
-                        <Menu class="w-5 h-5" />
-                    </button>
-
-                    <button
-                        type="button"
-                        @click="sidebarCollapsed = !sidebarCollapsed"
-                        class="hidden lg:flex p-1.5 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
-                        title="Toggle Navigation"
-                    >
-                        <Menu class="w-4 h-4" />
-                    </button>
-
-                    <div class="h-4 w-px bg-slate-200 dark:bg-slate-800 hidden sm:block"></div>
-
-                    <!-- Dynamic Breadcrumb Navigation -->
-                    <nav class="flex items-center gap-1.5 text-xs" aria-label="Breadcrumb">
-                        <template v-for="(crumb, idx) in resolvedBreadcrumbs" :key="idx">
-                            <span v-if="idx > 0" class="text-slate-300 dark:text-slate-700 select-none">/</span>
-
-                            <!-- Clickable Link (if previous crumb has route) -->
-                            <Link
-                                v-if="crumb.url && !crumb.isCurrent"
-                                :href="crumb.url"
-                                class="font-medium text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition truncate max-w-[140px]"
-                            >
-                                {{ crumb.title }}
-                            </Link>
-
-                            <!-- Non-clickable group name (e.g. User Management) -->
-                            <span
-                                v-else-if="!crumb.isCurrent"
-                                class="font-mono text-slate-400 dark:text-slate-500 uppercase tracking-wider text-[11px] truncate max-w-[140px] hidden sm:inline"
-                            >
-                                {{ crumb.title }}
-                            </span>
-
-                            <!-- Active current page name -->
-                            <span
-                                v-else
-                                class="font-bold text-slate-900 dark:text-white truncate max-w-[200px]"
-                            >
-                                {{ crumb.title }}
-                            </span>
-                        </template>
-                    </nav>
-                </div>
-
-                <!-- Right Header Actions -->
-                <div class="flex items-center gap-3">
-                    <!-- Search Command Palette Indicator -->
-                    <button
-                        type="button"
-                        @click="showCommandPalette = true"
-                        class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 bg-slate-50/80 dark:bg-slate-900 dark:border-slate-800 text-xs text-slate-400 cursor-pointer hover:border-slate-300 dark:hover:border-slate-700 hover:text-slate-600 dark:hover:text-slate-300 transition group"
-                        title="Buka Command Palette (Ctrl + K)"
-                    >
-                        <Search class="w-3.5 h-3.5 group-hover:text-indigo-600 transition" />
-                        <span class="text-[11px]">Cari menu, audit, aksi...</span>
-                        <kbd class="px-1.5 py-0.5 text-[10px] font-mono bg-white border border-slate-200 rounded text-slate-500 dark:bg-slate-800 dark:border-slate-700 group-hover:border-indigo-300 transition">Ctrl K</kbd>
-                    </button>
-
-                    <!-- Live Cluster Telemetry Capsule -->
-                    <div class="hidden lg:flex items-center gap-2 px-2.5 py-1 rounded-md bg-slate-50 border border-slate-200 dark:bg-slate-900/80 dark:border-slate-800 text-[11px] font-mono font-medium">
-                        <span class="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                            <span>24ms</span>
-                        </span>
-                        <span class="text-slate-300 dark:text-slate-700">&bull;</span>
-                        <span class="text-slate-600 dark:text-slate-400 font-semibold">SLA 99.98%</span>
-                    </div>
-
-                    <!-- Dark / Light Toggle -->
-                    <button
-                        type="button"
-                        @click="toggleTheme"
-                        class="p-2 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
-                        :title="isDark ? 'Mode Terang' : 'Mode Gelap'"
-                    >
-                        <Sun v-if="isDark" class="w-4 h-4 text-amber-400" />
-                        <Moon v-else class="w-4 h-4 text-slate-600" />
-                    </button>
-
-                    <div class="h-4 w-px bg-slate-200 dark:bg-slate-800"></div>
-
-                    <!-- Profile Dropdown -->
-                    <div class="relative">
-                        <button
-                            type="button"
-                            @click="userDropdownOpen = !userDropdownOpen"
-                            class="flex items-center gap-2 p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
-                        >
+                <!-- Sidebar Footer User Capsule -->
+                <div class="p-2.5 border-t border-slate-200 dark:border-slate-800/80">
+                    <div class="flex items-center justify-between p-1.5 rounded-lg border border-slate-200/90 bg-white dark:border-slate-800 dark:bg-slate-900/60 shadow-2xs">
+                        <div class="flex items-center gap-2 overflow-hidden">
                             <img
                                 :src="user?.avatar_url || 'https://ui-avatars.com/api/?name=Admin'"
                                 alt="Avatar"
-                                class="w-7 h-7 rounded-md object-cover ring-1 ring-slate-300 dark:ring-slate-700"
+                                class="w-6 h-6 rounded-md object-cover ring-1 ring-slate-200 dark:ring-slate-700 shrink-0"
                             />
-                            <ChevronDown class="w-3 h-3 text-slate-400" />
-                        </button>
-
-                        <div
-                            v-if="userDropdownOpen"
-                            @click="userDropdownOpen = false"
-                            class="fixed inset-0 z-40"
-                        ></div>
-
-                        <div
-                            v-if="userDropdownOpen"
-                            class="absolute right-0 mt-2 w-52 p-1 bg-white border border-slate-200 rounded-xl shadow-xl dark:bg-[#0D121F] dark:border-slate-800 z-50 text-xs text-slate-700 dark:text-slate-300 animate-in fade-in zoom-in-95 duration-100"
-                        >
-                            <div class="px-3 py-2 border-b border-slate-100 dark:border-slate-800/80 mb-1">
-                                <p class="font-bold text-slate-900 dark:text-white truncate">{{ user?.name }}</p>
-                                <p class="text-[11px] font-mono text-slate-400 truncate">{{ user?.email }}</p>
+                            <div v-show="!sidebarCollapsed" class="flex flex-col truncate">
+                                <span class="text-xs font-bold text-slate-900 dark:text-white truncate">{{ user?.name }}</span>
+                                <span class="text-[10px] font-mono text-slate-400 truncate">{{ user?.roles?.[0] || 'User' }}</span>
                             </div>
-
-                            <Link
-                                :href="route('profile.edit')"
-                                class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
-                            >
-                                <UserIcon class="w-3.5 h-3.5 text-slate-400" />
-                                <span>Profil Pengguna</span>
-                            </Link>
-
-                            <Link
-                                :href="route('admin.settings.index')"
-                                class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
-                            >
-                                <Settings class="w-3.5 h-3.5 text-slate-400" />
-                                <span>Konfigurasi Sistem</span>
-                            </Link>
-
-                            <div class="my-1 border-t border-slate-100 dark:border-slate-800/80"></div>
-
-                            <button
-                                type="button"
-                                @click="logout"
-                                class="w-full flex items-center gap-2 px-3 py-2 text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-950/30 rounded-lg transition text-left font-semibold"
-                            >
-                                <LogOut class="w-3.5 h-3.5" />
-                                <span>Keluar</span>
-                            </button>
                         </div>
+
+                        <button
+                            v-show="!sidebarCollapsed"
+                            type="button"
+                            @click="logout"
+                            title="Keluar"
+                            class="p-1 text-slate-400 hover:text-rose-600 hover:bg-slate-100 dark:hover:text-rose-400 dark:hover:bg-slate-800 rounded-md transition"
+                        >
+                            <LogOut class="w-3.5 h-3.5" />
+                        </button>
                     </div>
                 </div>
-            </header>
+            </aside>
 
-            <!-- Content Area -->
-            <main class="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6">
-                <slot />
-            </main>
+            <!-- Right Studio Pane: The Work Canvas with Independent Scroll -->
+            <div class="flex-1 flex flex-col h-full min-w-0 overflow-hidden bg-[#F8FAFC] dark:bg-[#080C16]">
+                
+                <!-- Internal Studio Topbar Console -->
+                <header class="h-14 px-4 sm:px-6 border-b border-slate-200 dark:border-slate-800/80 bg-white/95 dark:bg-[#0A0E18]/90 backdrop-blur-md flex items-center justify-between shrink-0 z-20">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <!-- Mobile Hamburger -->
+                        <button
+                            type="button"
+                            @click="sidebarOpen = true"
+                            class="p-1.5 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white lg:hidden rounded-lg"
+                        >
+                            <Menu class="w-5 h-5" />
+                        </button>
 
-            <!-- Footer -->
-            <footer class="mt-auto py-4 px-8 border-t border-slate-200 dark:border-slate-800/80 text-xs text-slate-400 dark:text-slate-500 font-mono flex flex-col sm:flex-row items-center justify-between gap-2">
-                <span>&copy; {{ new Date().getFullYear() }} {{ appSettings.name }} &bull; Enterprise Operations</span>
-                <span class="flex items-center gap-2">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                    <span>All services operational</span>
-                </span>
-            </footer>
+                        <!-- Desktop Sidebar Collapse Toggle -->
+                        <button
+                            type="button"
+                            @click="sidebarCollapsed = !sidebarCollapsed"
+                            class="hidden lg:flex p-1.5 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/60 transition"
+                            title="Toggle Sidebar"
+                        >
+                            <Menu class="w-4 h-4" />
+                        </button>
+
+                        <div class="h-4 w-px bg-slate-200 dark:bg-slate-800 hidden sm:block"></div>
+
+                        <!-- Dynamic Breadcrumb Navigation -->
+                        <nav class="flex items-center gap-1.5 text-xs truncate" aria-label="Breadcrumb">
+                            <template v-for="(crumb, idx) in resolvedBreadcrumbs" :key="idx">
+                                <span v-if="idx > 0" class="text-slate-300 dark:text-slate-700 select-none">/</span>
+                                <Link
+                                    v-if="crumb.url && !crumb.isCurrent"
+                                    :href="crumb.url"
+                                    class="font-medium text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition truncate max-w-[130px]"
+                                >
+                                    {{ crumb.title }}
+                                </Link>
+                                <span
+                                    v-else-if="!crumb.isCurrent"
+                                    class="font-mono text-slate-500 dark:text-slate-400 uppercase tracking-wider text-[11px] truncate max-w-[130px] hidden sm:inline"
+                                >
+                                    {{ crumb.title }}
+                                </span>
+                                <span
+                                    v-else
+                                    class="font-bold text-slate-900 dark:text-white truncate max-w-[180px]"
+                                >
+                                    {{ crumb.title }}
+                                </span>
+                            </template>
+                        </nav>
+                    </div>
+
+                    <!-- Right Header Actions -->
+                    <div class="flex items-center gap-2.5 shrink-0">
+                        <!-- Search Command Palette Indicator -->
+                        <button
+                            type="button"
+                            @click="showCommandPalette = true"
+                            class="hidden sm:flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900 text-xs text-slate-500 dark:text-slate-400 cursor-pointer hover:border-slate-300 dark:hover:border-slate-700 hover:text-slate-700 dark:hover:text-slate-300 transition group"
+                            title="Buka Command Palette (Ctrl + K)"
+                        >
+                            <Search class="w-3.5 h-3.5 group-hover:text-indigo-600 transition" />
+                            <span class="text-[11px]">Cari menu...</span>
+                            <kbd class="px-1.5 py-0.5 text-[10px] font-mono bg-white border border-slate-200 rounded text-slate-500 dark:bg-slate-800 dark:border-slate-700 group-hover:border-indigo-300 transition">Ctrl K</kbd>
+                        </button>
+
+                        <!-- Telemetry Pill -->
+                        <div class="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-50 border border-slate-200 dark:bg-slate-900 dark:border-slate-800 text-[11px] font-mono font-medium">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span class="text-emerald-600 dark:text-emerald-400">24ms</span>
+                            <span class="text-slate-300 dark:text-slate-700">&bull;</span>
+                            <span class="text-slate-500 dark:text-slate-400">SLA 99.98%</span>
+                        </div>
+
+                        <!-- Dark / Light Toggle -->
+                        <button
+                            type="button"
+                            @click="toggleTheme"
+                            class="p-1.5 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                            :title="isDark ? 'Mode Terang' : 'Mode Gelap'"
+                        >
+                            <Sun v-if="isDark" class="w-4 h-4 text-amber-400" />
+                            <Moon v-else class="w-4 h-4 text-slate-500" />
+                        </button>
+
+                        <div class="h-4 w-px bg-slate-200 dark:bg-slate-800"></div>
+
+                        <!-- Profile Dropdown -->
+                        <div class="relative">
+                            <button
+                                type="button"
+                                @click="userDropdownOpen = !userDropdownOpen"
+                                class="flex items-center gap-1.5 p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                            >
+                                <img
+                                    :src="user?.avatar_url || 'https://ui-avatars.com/api/?name=Admin'"
+                                    alt="Avatar"
+                                    class="w-7 h-7 rounded-md object-cover ring-1 ring-slate-200 dark:ring-slate-700"
+                                />
+                                <ChevronDown class="w-3 h-3 text-slate-400" />
+                            </button>
+
+                            <div
+                                v-if="userDropdownOpen"
+                                @click="userDropdownOpen = false"
+                                class="fixed inset-0 z-40"
+                            ></div>
+
+                            <div
+                                v-if="userDropdownOpen"
+                                class="absolute right-0 mt-2 w-52 p-1 bg-white border border-slate-200 rounded-xl shadow-xl dark:bg-[#0D121F] dark:border-slate-800 z-50 text-xs text-slate-700 dark:text-slate-300 animate-in fade-in zoom-in-95 duration-100"
+                            >
+                                <div class="px-3 py-2 border-b border-slate-100 dark:border-slate-800/80 mb-1">
+                                    <p class="font-bold text-slate-900 dark:text-white truncate">{{ user?.name }}</p>
+                                    <p class="text-[11px] font-mono text-slate-400 truncate">{{ user?.email }}</p>
+                                </div>
+
+                                <Link
+                                    :href="route('profile.edit')"
+                                    class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                                >
+                                    <UserIcon class="w-3.5 h-3.5 text-slate-400" />
+                                    <span>Profil Pengguna</span>
+                                </Link>
+
+                                <Link
+                                    :href="route('admin.settings.index')"
+                                    class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                                >
+                                    <Settings class="w-3.5 h-3.5 text-slate-400" />
+                                    <span>Konfigurasi Sistem</span>
+                                </Link>
+
+                                <div class="my-1 border-t border-slate-100 dark:border-slate-800/80"></div>
+
+                                <button
+                                    type="button"
+                                    @click="logout"
+                                    class="w-full flex items-center gap-2 px-3 py-2 text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-950/30 rounded-lg transition text-left font-semibold"
+                                >
+                                    <LogOut class="w-3.5 h-3.5" />
+                                    <span>Keluar</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Dedicated Work Canvas (Independent Scroll Container) -->
+                <main class="flex-1 overflow-y-auto custom-scrollbar p-5 sm:p-7 space-y-6">
+                    <div class="max-w-7xl mx-auto space-y-6">
+                        <slot />
+                    </div>
+
+                    <!-- Minimal Enterprise Footer -->
+                    <footer class="pt-8 pb-3 border-t border-slate-200/80 dark:border-slate-800/70 text-xs text-slate-400 dark:text-slate-500 font-mono flex flex-col sm:flex-row items-center justify-between gap-2 max-w-7xl mx-auto">
+                        <span>&copy; {{ new Date().getFullYear() }} {{ appSettings.name }} &bull; Enterprise Admin Console</span>
+                        <span class="flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                            <span>All services operational</span>
+                        </span>
+                    </footer>
+                </main>
+            </div>
         </div>
     </div>
 </template>

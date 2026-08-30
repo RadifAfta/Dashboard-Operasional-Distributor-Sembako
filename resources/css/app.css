@@ -37,6 +37,44 @@
     background: rgba(71, 85, 105, 0.7);
 }
 
+/* Ambient Atmosphere Canvas for Floating Islands and Studio Frame */
+.ambient-canvas {
+    background-color: #E6ECF5;
+    background-image: 
+        radial-gradient(at 15% 15%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
+        radial-gradient(at 85% 10%, rgba(16, 185, 129, 0.08) 0px, transparent 45%),
+        radial-gradient(at 50% 90%, rgba(148, 163, 184, 0.12) 0px, transparent 50%),
+        radial-gradient(rgba(100, 116, 139, 0.25) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 100% 100%, 24px 24px;
+    background-attachment: fixed;
+}
+
+.dark .ambient-canvas {
+    background-color: #060911;
+    background-image: 
+        radial-gradient(at 20% 10%, rgba(99, 102, 241, 0.14) 0px, transparent 45%),
+        radial-gradient(at 80% 15%, rgba(16, 185, 129, 0.07) 0px, transparent 40%),
+        radial-gradient(at 50% 85%, rgba(15, 23, 42, 0.3) 0px, transparent 50%),
+        radial-gradient(rgba(51, 65, 85, 0.3) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 100% 100%, 24px 24px;
+    background-attachment: fixed;
+}
+
+/* Floating Island Elevation and Shadows */
+.floating-island {
+    box-shadow: 
+        0 1px 2px 0 rgba(0, 0, 0, 0.03),
+        0 12px 30px -8px rgba(0, 0, 0, 0.06),
+        0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+}
+
+.dark .floating-island {
+    box-shadow: 
+        0 1px 2px 0 rgba(0, 0, 0, 0.2),
+        0 16px 36px -8px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+}
+
 /* High-Craft Blueprint Dot-Matrix Background */
 .bg-dot-matrix {
     background-image: radial-gradient(rgba(148, 163, 184, 0.25) 1px, transparent 1px);
