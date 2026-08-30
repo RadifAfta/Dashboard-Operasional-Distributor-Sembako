@@ -137,7 +137,7 @@ const toggleGroup = (form, groupPermissions) => {
                 <button
                     type="button"
                     @click="openCreateModal"
-                    class="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 rounded-xl shadow-sm transition shadow-indigo-600/20 self-start sm:self-auto"
+                    class="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-brand hover:opacity-90 rounded-xl shadow-sm transition shadow-brand/20 self-start sm:self-auto"
                 >
                     <Plus class="w-4 h-4" />
                     <span>Buat Role Baru</span>
@@ -154,7 +154,7 @@ const toggleGroup = (form, groupPermissions) => {
                     <div>
                         <div class="flex items-start justify-between">
                             <div class="flex items-center gap-3">
-                                <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-950/60 dark:text-indigo-400">
+                                <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-brand/10 text-brand dark:bg-brand/20 dark:text-brand">
                                     <Shield class="w-5 h-5" />
                                 </div>
                                 <div>
@@ -188,7 +188,7 @@ const toggleGroup = (form, groupPermissions) => {
                                 </span>
                                 <span
                                     v-if="role.permissions.length > 6"
-                                    class="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium bg-indigo-50 text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-400"
+                                    class="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium bg-brand/10 text-brand dark:bg-brand/20 dark:text-brand"
                                 >
                                     +{{ role.permissions.length - 6 }} lainnya
                                 </span>
@@ -205,7 +205,7 @@ const toggleGroup = (form, groupPermissions) => {
                             <button
                                 type="button"
                                 @click="openEditModal(role)"
-                                class="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:text-indigo-600 bg-slate-50 hover:bg-slate-100 rounded-lg dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 transition"
+                                class="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:text-brand bg-slate-50 hover:bg-slate-100 rounded-lg dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 transition"
                             >
                                 <Edit2 class="w-3.5 h-3.5" />
                                 <span>Edit Matrix</span>
@@ -255,7 +255,7 @@ const toggleGroup = (form, groupPermissions) => {
                                 type="text"
                                 required
                                 placeholder="Contoh: Editor, Staff Keuangan"
-                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white"
                             />
                             <p v-if="createForm.errors.name" class="mt-1 text-rose-500 font-medium">{{ createForm.errors.name }}</p>
                         </div>
@@ -275,7 +275,7 @@ const toggleGroup = (form, groupPermissions) => {
                                         <button
                                             type="button"
                                             @click="toggleGroup(createForm, perms)"
-                                            class="text-[10px] font-semibold text-indigo-600 dark:text-indigo-400 hover:underline"
+                                            class="text-[10px] font-semibold text-brand hover:underline"
                                         >
                                             {{ isGroupAllSelected(createForm, perms) ? 'Batalkan Semua' : 'Pilih Semua' }}
                                         </button>
@@ -290,7 +290,7 @@ const toggleGroup = (form, groupPermissions) => {
                                                 type="checkbox"
                                                 :value="p.name"
                                                 v-model="createForm.permissions"
-                                                class="w-4 h-4 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500"
+                                                class="w-4 h-4 text-brand border-slate-300 rounded focus:ring-brand"
                                             />
                                             <span>{{ p.name }}</span>
                                         </label>
@@ -310,7 +310,7 @@ const toggleGroup = (form, groupPermissions) => {
                             <button
                                 type="submit"
                                 :disabled="createForm.processing"
-                                class="px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-500 rounded-xl font-semibold disabled:opacity-50"
+                                class="px-4 py-2 text-white bg-brand hover:opacity-90 rounded-xl font-semibold disabled:opacity-50"
                             >
                                 Simpan Role
                             </button>
@@ -350,7 +350,7 @@ const toggleGroup = (form, groupPermissions) => {
                                 type="text"
                                 required
                                 :disabled="editForm.name === 'Super Admin'"
-                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 dark:bg-slate-800 dark:border-slate-700 dark:text-white disabled:opacity-60 disabled:bg-slate-100"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white disabled:opacity-60 disabled:bg-slate-100"
                             />
                             <p v-if="editForm.errors.name" class="mt-1 text-rose-500 font-medium">{{ editForm.errors.name }}</p>
                         </div>
@@ -370,7 +370,7 @@ const toggleGroup = (form, groupPermissions) => {
                                         <button
                                             type="button"
                                             @click="toggleGroup(editForm, perms)"
-                                            class="text-[10px] font-semibold text-indigo-600 dark:text-indigo-400 hover:underline"
+                                            class="text-[10px] font-semibold text-brand hover:underline"
                                         >
                                             {{ isGroupAllSelected(editForm, perms) ? 'Batalkan Semua' : 'Pilih Semua' }}
                                         </button>
@@ -385,7 +385,7 @@ const toggleGroup = (form, groupPermissions) => {
                                                 type="checkbox"
                                                 :value="p.name"
                                                 v-model="editForm.permissions"
-                                                class="w-4 h-4 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500"
+                                                class="w-4 h-4 text-brand border-slate-300 rounded focus:ring-brand"
                                             />
                                             <span>{{ p.name }}</span>
                                         </label>
@@ -405,7 +405,7 @@ const toggleGroup = (form, groupPermissions) => {
                             <button
                                 type="submit"
                                 :disabled="editForm.processing"
-                                class="px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-500 rounded-xl font-semibold disabled:opacity-50"
+                                class="px-4 py-2 text-white bg-brand hover:opacity-90 rounded-xl font-semibold disabled:opacity-50"
                             >
                                 Simpan Perubahan
                             </button>

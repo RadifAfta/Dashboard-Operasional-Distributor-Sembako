@@ -188,7 +188,7 @@ const handleRoleFilter = (e) => {
                     <button
                         type="button"
                         @click="openCreateModal"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 rounded-lg shadow-2xs transition"
+                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-brand hover:opacity-90 rounded-lg shadow-2xs transition"
                     >
                         <UserPlus class="w-3.5 h-3.5" />
                         <span>Tambah Pengguna</span>
@@ -250,7 +250,7 @@ const handleRoleFilter = (e) => {
                         <button
                             type="button"
                             @click="openEditModal(row)"
-                            class="p-1.5 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                            class="p-1.5 text-slate-400 hover:text-brand rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
                             title="Edit"
                         >
                             <Edit2 class="w-4 h-4" />
@@ -298,7 +298,7 @@ const handleRoleFilter = (e) => {
                                 type="text"
                                 required
                                 placeholder="Contoh: Radif Alamsyah"
-                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white"
                             />
                             <p v-if="createForm.errors.name" class="mt-1 text-rose-500 font-medium">{{ createForm.errors.name }}</p>
                         </div>
@@ -310,7 +310,7 @@ const handleRoleFilter = (e) => {
                                 type="email"
                                 required
                                 placeholder="nama@perusahaan.com"
-                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white"
                             />
                             <p v-if="createForm.errors.email" class="mt-1 text-rose-500 font-medium">{{ createForm.errors.email }}</p>
                         </div>
@@ -322,7 +322,7 @@ const handleRoleFilter = (e) => {
                                 type="password"
                                 required
                                 placeholder="Minimal 8 karakter"
-                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white"
                             />
                             <p v-if="createForm.errors.password" class="mt-1 text-rose-500 font-medium">{{ createForm.errors.password }}</p>
                         </div>
@@ -331,7 +331,7 @@ const handleRoleFilter = (e) => {
                             <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Role / Hak Akses</label>
                             <select
                                 v-model="createForm.role"
-                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white"
                             >
                                 <option v-for="r in roles" :key="r.id" :value="r.name">{{ r.name }}</option>
                             </select>
@@ -349,7 +349,7 @@ const handleRoleFilter = (e) => {
                             <button
                                 type="submit"
                                 :disabled="createForm.processing"
-                                class="px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-500 rounded-xl font-semibold disabled:opacity-50"
+                                class="px-4 py-2 text-white bg-brand hover:opacity-90 rounded-xl font-semibold disabled:opacity-50"
                             >
                                 Simpan Pengguna
                             </button>
@@ -388,7 +388,7 @@ const handleRoleFilter = (e) => {
                                 v-model="editForm.name"
                                 type="text"
                                 required
-                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white"
                             />
                             <p v-if="editForm.errors.name" class="mt-1 text-rose-500 font-medium">{{ editForm.errors.name }}</p>
                         </div>
@@ -399,7 +399,7 @@ const handleRoleFilter = (e) => {
                                 v-model="editForm.email"
                                 type="email"
                                 required
-                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white"
                             />
                             <p v-if="editForm.errors.email" class="mt-1 text-rose-500 font-medium">{{ editForm.errors.email }}</p>
                         </div>
@@ -412,7 +412,7 @@ const handleRoleFilter = (e) => {
                                 v-model="editForm.password"
                                 type="password"
                                 placeholder="Minimal 8 karakter"
-                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white"
                             />
                             <p v-if="editForm.errors.password" class="mt-1 text-rose-500 font-medium">{{ editForm.errors.password }}</p>
                         </div>
@@ -421,7 +421,7 @@ const handleRoleFilter = (e) => {
                             <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Role / Hak Akses</label>
                             <select
                                 v-model="editForm.role"
-                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white"
                             >
                                 <option v-for="r in roles" :key="r.id" :value="r.name">{{ r.name }}</option>
                             </select>
@@ -439,7 +439,7 @@ const handleRoleFilter = (e) => {
                             <button
                                 type="submit"
                                 :disabled="editForm.processing"
-                                class="px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-500 rounded-xl font-semibold disabled:opacity-50"
+                                class="px-4 py-2 text-white bg-brand hover:opacity-90 rounded-xl font-semibold disabled:opacity-50"
                             >
                                 Perbarui Pengguna
                             </button>

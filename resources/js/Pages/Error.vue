@@ -26,7 +26,7 @@ const details = computed(() => {
                 subtitle: '419 Page Expired',
                 description: 'Demi keamanan data Anda, sesi formulir telah berakhir karena tidak ada aktivitas dalam beberapa waktu. Silakan muat ulang halaman atau login kembali.',
                 icon: Clock,
-                color: 'text-indigo-500 bg-indigo-50 dark:bg-indigo-950/40 border-indigo-200 dark:border-indigo-900',
+                color: 'text-brand bg-brand/10 dark:bg-brand/20 border-brand/20 dark:border-brand/40',
             };
         case 500:
             return {
@@ -101,7 +101,7 @@ const reload = () => {
 
                 <Link
                     :href="route('admin.dashboard')"
-                    class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 rounded-xl shadow-sm transition"
+                    class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 text-xs font-bold text-white bg-brand hover:opacity-90 rounded-xl shadow-sm transition"
                 >
                     <Home class="w-3.5 h-3.5" />
                     <span>Kembali ke Dashboard</span>

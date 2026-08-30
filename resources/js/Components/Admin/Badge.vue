@@ -26,7 +26,7 @@ const variantClasses = computed(() => {
             return 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700';
         case 'primary':
         default:
-            return 'bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/40 dark:text-indigo-400 dark:border-indigo-800';
+            return 'bg-brand/10 text-brand border-brand/25 dark:bg-brand/20 dark:text-brand dark:border-brand/40';
     }
 });
 

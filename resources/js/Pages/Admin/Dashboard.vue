@@ -111,7 +111,7 @@ const exportAuditCSV = () => {
         <Head title="Monitoring Operasional & Audit" />
 
         <div class="space-y-6">
-            <!-- 1. Executive Operations Header (Stripe / Linear Grade) -->
+            <!-- 1. Studio Page Header & Controls -->
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-5 border-b border-slate-200 dark:border-slate-800">
                 <div>
                     <h2 class="text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white">
@@ -126,7 +126,7 @@ const exportAuditCSV = () => {
                 <div class="flex items-center gap-2.5 shrink-0">
                     <select
                         v-model="selectedRange"
-                        class="py-1.5 px-3 text-xs font-semibold bg-white border border-slate-200 rounded-lg focus:ring-1 focus:ring-slate-900 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-200"
+                        class="py-1.5 px-3 text-xs font-semibold bg-white border border-slate-200 rounded-lg focus:ring-1 focus:ring-slate-900 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-200 shadow-2xs"
                     >
                         <option value="today">Hari Ini (24 Jam)</option>
                         <option value="7d">7 Hari Terakhir</option>
@@ -144,7 +144,7 @@ const exportAuditCSV = () => {
                 </div>
             </div>
 
-            <!-- 2. Precision Operational KPI Cards (Linear / Stripe Style) -->
+            <!-- 2. Precision Operational KPI Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <!-- Card 1: Throughput -->
                 <div class="spotlight-card p-5 bg-white border border-slate-200 rounded-xl dark:bg-[#0D121F] dark:border-slate-800/90 shadow-2xs">
@@ -295,7 +295,7 @@ const exportAuditCSV = () => {
 
                     <div class="flex items-center gap-4 text-xs font-mono text-slate-500 dark:text-slate-400">
                         <span class="flex items-center gap-1.5">
-                            <span class="w-2.5 h-0.5 bg-indigo-600 inline-block"></span>
+                            <span class="w-2.5 h-0.5 bg-brand inline-block"></span>
                             <span>Throughput Aktual</span>
                         </span>
                         <span class="flex items-center gap-1.5">
@@ -310,8 +310,8 @@ const exportAuditCSV = () => {
                     <svg viewBox="0 0 800 180" class="w-full h-full overflow-visible" preserveAspectRatio="none">
                         <defs>
                             <linearGradient id="opGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stop-color="#4F46E5" stop-opacity="0.25" />
-                                <stop offset="100%" stop-color="#4F46E5" stop-opacity="0.0" />
+                                <stop offset="0%" stop-color="var(--brand-hex, #4F46E5)" stop-opacity="0.3" />
+                                <stop offset="100%" stop-color="var(--brand-hex, #4F46E5)" stop-opacity="0.0" />
                             </linearGradient>
                         </defs>
 
@@ -339,8 +339,8 @@ const exportAuditCSV = () => {
                         <polyline
                             :points="chartPoints.line"
                             fill="none"
-                            stroke="#4F46E5"
-                            stroke-width="2"
+                            stroke="var(--brand-hex, #4F46E5)"
+                            stroke-width="2.5"
                             stroke-linecap="round"
                             stroke-linejoin="round"
                         />
@@ -352,7 +352,7 @@ const exportAuditCSV = () => {
                             :cx="p.x"
                             :cy="p.y"
                             r="3.5"
-                            class="fill-white dark:fill-[#0D121F] stroke-indigo-600 stroke-[2] hover:r-5 transition-all"
+                            class="fill-white dark:fill-[#0D121F] stroke-brand stroke-[2] hover:r-5 transition-all"
                         />
                     </svg>
                 </div>
