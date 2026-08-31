@@ -280,11 +280,18 @@ const logout = () => {
 
                 <!-- Navigation Links -->
                 <div class="flex-1 px-2.5 py-3 space-y-1 overflow-y-auto custom-scrollbar">
-                    <div v-if="!sidebarCollapsed" class="px-2 pb-1 text-[10px] font-mono uppercase tracking-widest text-slate-400 dark:text-slate-500 font-semibold">
-                        Workspace
-                    </div>
+                    <template v-for="(item, index) in menuItems" :key="index">
+                        <!-- Dynamic Section Header Divider -->
+                        <div
+                            v-if="!sidebarCollapsed && item.section && (index === 0 || menuItems[index - 1].section !== item.section)"
+                            :class="[
+                                'px-2.5 text-[10px] font-mono uppercase tracking-widest font-bold text-slate-400 dark:text-zinc-500',
+                                index === 0 ? 'pb-1' : 'pt-3.5 pb-1'
+                            ]"
+                        >
+                            {{ item.section }}
+                        </div>
 
-                    <div v-for="(item, index) in menuItems" :key="index">
                         <!-- Standard Menu Item -->
                         <Link
                             v-if="!item.children"
@@ -363,7 +370,7 @@ const logout = () => {
                                 </Link>
                             </div>
                         </div>
-                    </div>
+                    </template>
                 </div>
             </aside>
 

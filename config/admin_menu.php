@@ -8,14 +8,19 @@ return [
     */
 
     'items' => [
+        // 1. UTAMA / WORKSPACE
         [
+            'section' => 'Utama',
             'title' => 'Dashboard',
             'icon' => 'LayoutDashboard',
             'route' => 'admin.dashboard',
             'active' => 'admin.dashboard*',
             'permission' => null,
         ],
+
+        // 2. TRANSAKSI & OPERASIONAL HARIAN
         [
+            'section' => 'Transaksi',
             'title' => 'Kasir (POS)',
             'icon' => 'ShoppingCart',
             'route' => 'admin.pos.index',
@@ -24,6 +29,17 @@ return [
             'badge' => 'Cepat',
         ],
         [
+            'section' => 'Transaksi',
+            'title' => 'Piutang & Jatuh Tempo',
+            'icon' => 'Clock',
+            'route' => 'admin.debts.index',
+            'active' => 'admin.debts.*',
+            'permission' => null,
+        ],
+
+        // 3. MASTER DATA
+        [
+            'section' => 'Data Master',
             'title' => 'Master Data',
             'icon' => 'Package',
             'active' => 'admin.products.*|admin.customers.*',
@@ -43,21 +59,20 @@ return [
                 ],
             ],
         ],
+
+        // 4. LAPORAN
         [
-            'title' => 'Piutang & Jatuh Tempo',
-            'icon' => 'Clock',
-            'route' => 'admin.debts.index',
-            'active' => 'admin.debts.*',
-            'permission' => null,
-        ],
-        [
+            'section' => 'Laporan',
             'title' => 'Laporan & Tutup Buku',
             'icon' => 'FileText',
             'route' => 'admin.closure.index',
             'active' => 'admin.closure.*',
             'permission' => null,
         ],
+
+        // 5. PENGATURAN & SISTEM
         [
+            'section' => 'Sistem & Pengaturan',
             'title' => 'Manajemen User',
             'icon' => 'Users',
             'active' => 'admin.users.*|admin.roles.*',
@@ -78,6 +93,7 @@ return [
             ],
         ],
         [
+            'section' => 'Sistem & Pengaturan',
             'title' => 'Pengaturan Toko',
             'icon' => 'Settings',
             'route' => 'admin.settings.index',
@@ -85,6 +101,7 @@ return [
             'permission' => 'view-settings',
         ],
         [
+            'section' => 'Sistem & Pengaturan',
             'title' => 'Audit Log',
             'icon' => 'Activity',
             'route' => 'admin.audit-logs.index',
