@@ -45,27 +45,22 @@ return [
             'permission' => null,
         ],
 
-        // 3. MASTER DATA
+        // 3. DATA MASTER (Langsung 1-Click tanpa redundant dropdown)
         [
             'section' => 'Data Master',
-            'title' => 'Master Data',
+            'title' => 'Produk & Multi-Satuan',
             'icon' => 'Package',
-            'active' => 'admin.products.*|admin.customers.*',
+            'route' => 'admin.products.index',
+            'active' => 'admin.products.*',
             'permission' => null,
-            'children' => [
-                [
-                    'title' => 'Produk & Multi-Satuan',
-                    'route' => 'admin.products.index',
-                    'active' => 'admin.products.*',
-                    'permission' => null,
-                ],
-                [
-                    'title' => 'Pelanggan Grosir',
-                    'route' => 'admin.customers.index',
-                    'active' => 'admin.customers.*',
-                    'permission' => null,
-                ],
-            ],
+        ],
+        [
+            'section' => 'Data Master',
+            'title' => 'Pelanggan Grosir',
+            'icon' => 'Building2',
+            'route' => 'admin.customers.index',
+            'active' => 'admin.customers.*',
+            'permission' => null,
         ],
 
         // 4. PENGATURAN & SISTEM
