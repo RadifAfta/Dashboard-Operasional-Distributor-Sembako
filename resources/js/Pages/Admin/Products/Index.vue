@@ -22,6 +22,7 @@ import {
     ChevronLeft,
     ChevronRight,
     ExternalLink,
+    Eye,
 } from 'lucide-vue-next';
 
 const props = defineProps({
@@ -80,6 +81,15 @@ const resetFilters = () => {
 // Format Currency
 const formatRupiah = (val) => {
     return 'Rp ' + Number(val || 0).toLocaleString('id-ID');
+};
+
+// Detail Modal
+const isDetailModalOpen = ref(false);
+const selectedProduct = ref(null);
+
+const openDetailModal = (product) => {
+    selectedProduct.value = product;
+    isDetailModalOpen.value = true;
 };
 
 // Product Modal (Create & Edit)
@@ -405,21 +415,17 @@ const submitBatchImport = () => {
 
                 <!-- Products Table -->
                 <!-- Products Table (1 Kolom = 1 Informasi Jelas & Rapi) -->
+                <!-- Products Table (Hanya Kolom Penting, Pas di Layar Tanpa Scroll Horizontal) -->
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs whitespace-nowrap">
+                    <table class="w-full text-left text-xs">
                         <thead class="bg-slate-50/80 dark:bg-[#18181C] text-slate-600 dark:text-zinc-400 font-semibold border-b border-slate-200/80 dark:border-zinc-800/80">
                             <tr>
-                                <th class="py-3 px-4">Kode SKU</th>
-                                <th class="py-3 px-4">Barcode</th>
+                                <th class="py-3 px-4 w-36">Kode SKU</th>
                                 <th class="py-3 px-4">Nama Barang</th>
-                                <th class="py-3 px-4">Kategori</th>
-                                <th class="py-3 px-4 text-center">Satuan Dasar</th>
-                                <th class="py-3 px-4 text-right">Harga Beli (HPP)</th>
-                                <th class="py-3 px-4 text-right">Harga Jual</th>
-                                <th class="py-3 px-4">Satuan Grosir</th>
-                                <th class="py-3 px-4 text-right">Stok Min</th>
-                                <th class="py-3 px-4 text-right">Stok Sekarang</th>
-                                <th class="py-3 px-4 text-right">Aksi</th>
+                                <th class="py-3 px-4 w-36">Kategori</th>
+                                <th class="py-3 px-4 text-right w-36">Harga Jual</th>
+                                <th class="py-3 px-4 text-right w-36">Stok Gudang</th>
+                                <th class="py-3 px-4 text-right w-28">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-200/60 dark:divide-zinc-800/60">
@@ -427,66 +433,39 @@ const submitBatchImport = () => {
                                 v-for="product in products.data"
                                 :key="product.id"
                                 class="hover:bg-slate-50/80 dark:hover:bg-[#1c1c21] transition-colors"
-                                :class="product.current_stock <= product.min_stock ? 'bg-rose-50/40 dark:bg-rose-950/20' : ''"
+                                :class="product.current_stock <= product.min_stock ? 'bg-rose-50/30 dark:bg-rose-950/15' : ''"
                             >
                                 <!-- 1. Kode SKU -->
                                 <td class="py-3 px-4 font-mono font-bold text-slate-900 dark:text-zinc-100">
                                     {{ product.sku }}
                                 </td>
 
-                                <!-- 2. Barcode -->
-                                <td class="py-3 px-4 font-mono text-slate-500 dark:text-zinc-400">
-                                    {{ product.barcode || '-' }}
+                                <!-- 2. Nama Barang -->
+                                <td class="py-3 px-4">
+                                    <button
+                                        type="button"
+                                        @click="openDetailModal(product)"
+                                        class="font-bold text-slate-900 dark:text-zinc-100 hover:text-brand transition-colors text-left cursor-pointer"
+                                        title="Klik untuk melihat detail lengkap"
+                                    >
+                                        {{ product.name }}
+                                    </button>
                                 </td>
 
-                                <!-- 3. Nama Barang -->
-                                <td class="py-3 px-4 font-bold text-slate-900 dark:text-zinc-100">
-                                    {{ product.name }}
-                                </td>
-
-                                <!-- 4. Kategori -->
+                                <!-- 3. Kategori -->
                                 <td class="py-3 px-4">
                                     <span class="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 font-medium text-[11px] border border-slate-200/60 dark:border-zinc-700/60">
                                         {{ product.category }}
                                     </span>
                                 </td>
 
-                                <!-- 5. Satuan Dasar -->
-                                <td class="py-3 px-4 text-center font-medium text-slate-700 dark:text-zinc-300">
-                                    {{ product.base_unit }}
-                                </td>
-
-                                <!-- 6. Harga Beli (HPP) -->
-                                <td class="py-3 px-4 text-right font-medium text-slate-500 dark:text-zinc-400">
-                                    {{ formatRupiah(product.cost_price) }}
-                                </td>
-
-                                <!-- 7. Harga Jual Satuan Dasar -->
+                                <!-- 4. Harga Jual Satuan -->
                                 <td class="py-3 px-4 text-right font-bold text-slate-900 dark:text-zinc-100">
                                     {{ formatRupiah(product.selling_price) }}
+                                    <span class="text-[11px] font-normal text-slate-400 dark:text-zinc-500">/ {{ product.base_unit }}</span>
                                 </td>
 
-                                <!-- 8. Satuan Grosir -->
-                                <td class="py-3 px-4">
-                                    <div v-if="product.units && product.units.length > 0" class="flex flex-wrap gap-1.5">
-                                        <span
-                                            v-for="unit in product.units"
-                                            :key="unit.id"
-                                            class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-800 dark:text-zinc-200 text-[11px]"
-                                        >
-                                            <span class="font-bold">1 {{ unit.unit_name }}</span> ({{ unit.conversion_ratio }} {{ product.base_unit }})
-                                            <span class="text-emerald-600 dark:text-emerald-400 font-semibold">• {{ formatRupiah(unit.selling_price) }}</span>
-                                        </span>
-                                    </div>
-                                    <span v-else class="text-slate-400 dark:text-zinc-600">-</span>
-                                </td>
-
-                                <!-- 9. Batas Stok Minimum -->
-                                <td class="py-3 px-4 text-right font-medium text-slate-500 dark:text-zinc-400">
-                                    {{ product.min_stock }}
-                                </td>
-
-                                <!-- 10. Stok Sekarang -->
+                                <!-- 5. Stok Gudang -->
                                 <td class="py-3 px-4 text-right">
                                     <span
                                         class="font-bold text-sm"
@@ -497,8 +476,15 @@ const submitBatchImport = () => {
                                     <span class="text-[11px] text-slate-400 dark:text-zinc-500 ml-1">{{ product.base_unit }}</span>
                                 </td>
 
-                                <!-- 11. Aksi -->
+                                <!-- 6. Aksi (Detail, Edit, Hapus) -->
                                 <td class="py-3 px-4 text-right space-x-1 whitespace-nowrap">
+                                    <button
+                                        @click="openDetailModal(product)"
+                                        class="p-1.5 rounded-lg text-slate-400 hover:text-brand hover:bg-brand/10 transition-colors cursor-pointer"
+                                        title="Lihat Detail Produk"
+                                    >
+                                        <Eye class="w-4 h-4" />
+                                    </button>
                                     <button
                                         @click="openEditModal(product)"
                                         class="p-1.5 rounded-lg text-slate-400 hover:text-brand hover:bg-brand/10 transition-colors cursor-pointer"
@@ -517,7 +503,7 @@ const submitBatchImport = () => {
                             </tr>
 
                             <tr v-if="products.data.length === 0">
-                                <td colspan="11" class="py-12 text-center text-slate-400 dark:text-zinc-500">
+                                <td colspan="6" class="py-12 text-center text-slate-400 dark:text-zinc-500">
                                     <Package class="w-10 h-10 mx-auto text-slate-300 dark:text-zinc-700 mb-2" />
                                     <p class="font-medium">Tidak ada data barang yang sesuai filter.</p>
                                     <button @click="resetFilters" class="mt-2 text-xs text-brand hover:underline font-bold cursor-pointer">
@@ -904,6 +890,150 @@ const submitBatchImport = () => {
                         class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-sm cursor-pointer"
                     >
                         Ya, Hapus Produk
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detail Product Modal -->
+        <div
+            v-if="isDetailModalOpen"
+            class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs"
+        >
+            <div class="bg-white dark:bg-[#141417] rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 dark:border-zinc-800 space-y-5">
+                <!-- Modal Header -->
+                <div class="flex items-start justify-between border-b border-slate-200/80 dark:border-zinc-800/80 pb-4">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="px-2 py-0.5 rounded-md bg-brand/10 text-brand text-xs font-bold border border-brand/20">
+                                {{ selectedProduct?.sku }}
+                            </span>
+                            <span class="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400 text-xs font-semibold">
+                                {{ selectedProduct?.category }}
+                            </span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-1.5">
+                            {{ selectedProduct?.name }}
+                        </h3>
+                    </div>
+                    <button
+                        @click="isDetailModalOpen = false"
+                        class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 transition-colors cursor-pointer"
+                    >
+                        <X class="w-5 h-5" />
+                    </button>
+                </div>
+
+                <!-- Informasi Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+                    <div class="p-3 rounded-xl bg-slate-50 dark:bg-zinc-900/60 border border-slate-200/60 dark:border-zinc-800/60">
+                        <span class="text-slate-400 dark:text-zinc-500 block text-[11px]">Barcode</span>
+                        <span class="font-mono font-bold text-slate-900 dark:text-zinc-100 mt-0.5 block">
+                            {{ selectedProduct?.barcode || '-' }}
+                        </span>
+                    </div>
+
+                    <div class="p-3 rounded-xl bg-slate-50 dark:bg-zinc-900/60 border border-slate-200/60 dark:border-zinc-800/60">
+                        <span class="text-slate-400 dark:text-zinc-500 block text-[11px]">Satuan Dasar</span>
+                        <span class="font-bold text-slate-900 dark:text-zinc-100 mt-0.5 block">
+                            {{ selectedProduct?.base_unit }}
+                        </span>
+                    </div>
+
+                    <div class="p-3 rounded-xl bg-slate-50 dark:bg-zinc-900/60 border border-slate-200/60 dark:border-zinc-800/60">
+                        <span class="text-slate-400 dark:text-zinc-500 block text-[11px]">Status</span>
+                        <span class="font-bold text-emerald-600 dark:text-emerald-400 mt-0.5 block capitalize">
+                            {{ selectedProduct?.status === 'active' ? 'Aktif Dijual' : 'Non-Aktif' }}
+                        </span>
+                    </div>
+
+                    <div class="p-3 rounded-xl bg-slate-50 dark:bg-zinc-900/60 border border-slate-200/60 dark:border-zinc-800/60">
+                        <span class="text-slate-400 dark:text-zinc-500 block text-[11px]">Harga Beli (HPP)</span>
+                        <span class="font-bold text-slate-900 dark:text-zinc-100 mt-0.5 block">
+                            {{ formatRupiah(selectedProduct?.cost_price) }}
+                        </span>
+                    </div>
+
+                    <div class="p-3 rounded-xl bg-slate-50 dark:bg-zinc-900/60 border border-slate-200/60 dark:border-zinc-800/60">
+                        <span class="text-slate-400 dark:text-zinc-500 block text-[11px]">Harga Jual Satuan</span>
+                        <span class="font-bold text-emerald-600 dark:text-emerald-400 mt-0.5 block">
+                            {{ formatRupiah(selectedProduct?.selling_price) }}
+                        </span>
+                    </div>
+
+                    <div class="p-3 rounded-xl bg-slate-50 dark:bg-zinc-900/60 border border-slate-200/60 dark:border-zinc-800/60">
+                        <span class="text-slate-400 dark:text-zinc-500 block text-[11px]">Estimasi Margin Laba</span>
+                        <span class="font-bold text-brand mt-0.5 block">
+                            {{ formatRupiah((selectedProduct?.selling_price || 0) - (selectedProduct?.cost_price || 0)) }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Posisi Stok Gudang -->
+                <div class="p-3.5 rounded-xl border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900/40 flex items-center justify-between text-xs">
+                    <div>
+                        <span class="text-slate-500 dark:text-zinc-400 block text-[11px]">Posisi Stok Gudang</span>
+                        <span
+                            class="text-base font-extrabold mt-0.5 block"
+                            :class="selectedProduct?.current_stock <= selectedProduct?.min_stock ? 'text-rose-600 dark:text-rose-400' : 'text-slate-900 dark:text-zinc-100'"
+                        >
+                            {{ selectedProduct?.current_stock }} {{ selectedProduct?.base_unit }}
+                        </span>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-slate-500 dark:text-zinc-400 block text-[11px]">Batas Stok Minimal</span>
+                        <span class="font-bold text-slate-800 dark:text-zinc-200 mt-0.5 block">
+                            {{ selectedProduct?.min_stock }} {{ selectedProduct?.base_unit }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Daftar Satuan Grosir Multi-Satuan -->
+                <div>
+                    <h4 class="text-xs font-bold text-slate-800 dark:text-zinc-200 mb-2">
+                        Konversi Multi-Satuan Grosir
+                    </h4>
+                    <div v-if="selectedProduct?.units && selectedProduct.units.length > 0" class="border border-slate-200 dark:border-zinc-800 rounded-xl overflow-hidden text-xs">
+                        <table class="w-full text-left">
+                            <thead class="bg-slate-100 dark:bg-zinc-800/60 text-slate-600 dark:text-zinc-400 font-semibold">
+                                <tr>
+                                    <th class="py-2 px-3">Nama Satuan</th>
+                                    <th class="py-2 px-3">Rasio Konversi</th>
+                                    <th class="py-2 px-3 text-right">Harga Jual Grosir</th>
+                                    <th class="py-2 px-3">Barcode Satuan</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200/60 dark:divide-zinc-800/60">
+                                <tr v-for="unit in selectedProduct.units" :key="unit.id">
+                                    <td class="py-2 px-3 font-bold text-slate-900 dark:text-zinc-100">{{ unit.unit_name }}</td>
+                                    <td class="py-2 px-3 text-slate-600 dark:text-zinc-400">1 {{ unit.unit_name }} = {{ unit.conversion_ratio }} {{ selectedProduct.base_unit }}</td>
+                                    <td class="py-2 px-3 text-right font-bold text-emerald-600 dark:text-emerald-400">{{ formatRupiah(unit.selling_price) }}</td>
+                                    <td class="py-2 px-3 font-mono text-slate-500 dark:text-zinc-400">{{ unit.barcode || '-' }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div v-else class="p-3 rounded-xl bg-slate-50 dark:bg-zinc-900/40 border border-slate-200 dark:border-zinc-800 text-xs text-slate-500 dark:text-zinc-400 italic">
+                        Produk ini hanya dijual dalam satuan dasar ({{ selectedProduct?.base_unit }}), belum ada satuan grosir tambahan.
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="pt-2 flex items-center justify-end gap-2 border-t border-slate-200/80 dark:border-zinc-800/80">
+                    <button
+                        @click="isDetailModalOpen = false"
+                        type="button"
+                        class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-zinc-800 hover:bg-slate-200 dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-300 font-semibold text-xs transition-colors cursor-pointer"
+                    >
+                        Tutup
+                    </button>
+                    <button
+                        @click="isDetailModalOpen = false; openEditModal(selectedProduct)"
+                        type="button"
+                        class="px-4 py-2 rounded-xl bg-brand hover:opacity-90 text-white font-bold text-xs shadow-sm shadow-brand/20 transition-all cursor-pointer flex items-center gap-1.5"
+                    >
+                        <Edit class="w-3.5 h-3.5" />
+                        <span>Edit Data Produk</span>
                     </button>
                 </div>
             </div>
