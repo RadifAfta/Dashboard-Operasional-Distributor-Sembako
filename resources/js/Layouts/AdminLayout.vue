@@ -345,33 +345,6 @@ const logout = () => {
                         </div>
                     </div>
                 </div>
-
-                <!-- Sidebar Footer User Capsule -->
-                <div class="p-2.5 border-t border-slate-200 dark:border-zinc-800/80">
-                    <div class="flex items-center justify-between p-1.5 rounded-lg border border-slate-200/90 bg-white dark:border-zinc-800 dark:bg-[#18181B] shadow-2xs">
-                        <div class="flex items-center gap-2 overflow-hidden">
-                            <img
-                                :src="user?.avatar_url || 'https://ui-avatars.com/api/?name=Admin'"
-                                alt="Avatar"
-                                class="w-6 h-6 rounded-md object-cover shrink-0"
-                            />
-                            <div v-show="!sidebarCollapsed" class="flex flex-col truncate">
-                                <span class="text-xs font-bold text-slate-900 dark:text-white truncate">{{ user?.name }}</span>
-                                <span class="text-[10px] font-mono text-slate-400 truncate">{{ user?.roles?.[0] || 'User' }}</span>
-                            </div>
-                        </div>
-
-                        <button
-                            v-show="!sidebarCollapsed"
-                            type="button"
-                            @click="logout"
-                            title="Keluar"
-                            class="p-1 text-slate-400 hover:text-rose-600 hover:bg-slate-100 dark:hover:text-rose-400 dark:hover:bg-zinc-800 rounded-md transition"
-                        >
-                            <LogOut class="w-3.5 h-3.5" />
-                        </button>
-                    </div>
-                </div>
             </aside>
 
             <!-- Right Studio Pane: The Work Canvas with Independent Scroll -->
