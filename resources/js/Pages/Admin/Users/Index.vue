@@ -32,7 +32,8 @@ const props = defineProps({
 });
 
 const columns = [
-    { key: 'user', label: 'Pengguna', sortable: true },
+    { key: 'name', label: 'Nama Pengguna', sortable: true },
+    { key: 'email', label: 'Email', sortable: true },
     { key: 'role', label: 'Role / Hak Akses', sortable: false },
     { key: 'created_at', label: 'Tanggal Terdaftar', sortable: true },
 ];
@@ -173,7 +174,7 @@ const handleRoleFilter = (e) => {
                         <select
                             :value="filters.role || ''"
                             @change="handleRoleFilter"
-                            class="py-1.5 px-2.5 text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-slate-900 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-200"
+                            class="py-1.5 px-2.5 text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-200"
                         >
                             <option value="">Semua Hak Akses (Role)</option>
                             <option v-for="r in roles" :key="r.id" :value="r.name">
@@ -207,39 +208,33 @@ const handleRoleFilter = (e) => {
                     </button>
                 </template>
 
-                <!-- Custom Cell for User Info -->
-                <template #cell(user)="{ row }">
-                    <div class="flex items-center gap-3">
-                        <img
-                            :src="row.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(row.name)}`"
-                            alt="Avatar"
-                            class="w-9 h-9 rounded-xl object-cover ring-1 ring-slate-200 dark:ring-slate-800"
-                        />
-                        <div class="min-w-0">
-                            <p class="font-bold text-xs text-slate-900 dark:text-white truncate">
-                                {{ row.name }}
-                            </p>
-                            <p class="text-[11px] text-slate-400 truncate">
-                                {{ row.email }}
-                            </p>
-                        </div>
-                    </div>
+                <!-- Custom Cell for Name (Clean plain text) -->
+                <template #cell(name)="{ value }">
+                    <span class="font-medium text-xs text-slate-900 dark:text-zinc-100">
+                        {{ value }}
+                    </span>
                 </template>
 
-                <!-- Custom Cell for Role -->
+                <!-- Custom Cell for Email (Clean plain text) -->
+                <template #cell(email)="{ value }">
+                    <span class="text-xs text-slate-600 dark:text-zinc-400">
+                        {{ value }}
+                    </span>
+                </template>
+
+                <!-- Custom Cell for Role (Plain text value without border/icon) -->
                 <template #cell(role)="{ row }">
-                    <Badge
-                        :variant="row.roles?.[0]?.name === 'Super Admin' ? 'danger' : (row.roles?.[0]?.name === 'Admin' ? 'primary' : 'neutral')"
-                        size="sm"
+                    <span
+                        class="text-xs font-medium"
+                        :class="row.roles?.[0]?.name === 'Super Admin' ? 'text-rose-600 dark:text-rose-400 font-semibold' : (row.roles?.[0]?.name === 'Admin' ? 'text-brand font-medium' : 'text-slate-600 dark:text-zinc-400')"
                     >
-                        <Shield class="w-3 h-3" />
-                        <span>{{ row.roles?.[0]?.name || 'Tanpa Role' }}</span>
-                    </Badge>
+                        {{ row.roles?.[0]?.name || 'Tanpa Role' }}
+                    </span>
                 </template>
 
-                <!-- Custom Cell for Date -->
+                <!-- Custom Cell for Date (Plain mono value) -->
                 <template #cell(created_at)="{ value }">
-                    <span class="text-xs text-slate-500 dark:text-slate-400">
+                    <span class="text-xs text-slate-500 dark:text-zinc-400 font-mono">
                         {{ new Date(value).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) }}
                     </span>
                 </template>
@@ -250,18 +245,18 @@ const handleRoleFilter = (e) => {
                         <button
                             type="button"
                             @click="openEditModal(row)"
-                            class="p-1.5 text-slate-400 hover:text-brand rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                            class="p-1.5 text-slate-400 hover:text-brand rounded-lg hover:bg-slate-100 dark:hover:bg-zinc-800 transition"
                             title="Edit"
                         >
-                            <Edit2 class="w-4 h-4" />
+                            <Edit2 class="w-3.5 h-3.5" />
                         </button>
                         <button
                             type="button"
                             @click="confirmDelete(row)"
-                            class="p-1.5 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                            class="p-1.5 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 rounded-lg hover:bg-slate-100 dark:hover:bg-zinc-800 transition"
                             title="Hapus"
                         >
-                            <Trash2 class="w-4 h-4" />
+                            <Trash2 class="w-3.5 h-3.5" />
                         </button>
                     </div>
                 </template>
@@ -272,13 +267,13 @@ const handleRoleFilter = (e) => {
         <Teleport to="body">
             <div
                 v-if="showCreateModal"
-                class="fixed inset-0 z-50 overflow-y-auto bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4"
+                class="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-xs flex items-center justify-center p-4"
                 @click.self="showCreateModal = false"
             >
-                <div class="relative w-full max-w-lg p-6 bg-white rounded-2xl shadow-2xl border border-slate-200 dark:bg-slate-900 dark:border-slate-800">
-                    <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+                <div class="relative w-full max-w-lg p-6 bg-white rounded-2xl shadow-2xl border border-slate-200 dark:bg-[#141417] dark:border-zinc-800">
+                    <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-zinc-800">
                         <h3 class="text-base font-bold text-slate-900 dark:text-white">Tambah Pengguna Baru</h3>
-                        <button @click="showCreateModal = false" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
+                        <button @click="showCreateModal = false" class="text-slate-400 hover:text-slate-600 dark:hover:text-zinc-300 p-1 rounded-lg">
                             <X class="w-4 h-4" />
                         </button>
                     </div>
@@ -298,7 +293,7 @@ const handleRoleFilter = (e) => {
                                 type="text"
                                 required
                                 placeholder="Contoh: Radif Alamsyah"
-                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-[#0E0E11] dark:border-zinc-800 dark:text-zinc-100"
                             />
                             <p v-if="createForm.errors.name" class="mt-1 text-rose-500 font-medium">{{ createForm.errors.name }}</p>
                         </div>
@@ -310,7 +305,7 @@ const handleRoleFilter = (e) => {
                                 type="email"
                                 required
                                 placeholder="nama@perusahaan.com"
-                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-[#0E0E11] dark:border-zinc-800 dark:text-zinc-100"
                             />
                             <p v-if="createForm.errors.email" class="mt-1 text-rose-500 font-medium">{{ createForm.errors.email }}</p>
                         </div>
@@ -322,7 +317,7 @@ const handleRoleFilter = (e) => {
                                 type="password"
                                 required
                                 placeholder="Minimal 8 karakter"
-                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-[#0E0E11] dark:border-zinc-800 dark:text-zinc-100"
                             />
                             <p v-if="createForm.errors.password" class="mt-1 text-rose-500 font-medium">{{ createForm.errors.password }}</p>
                         </div>
@@ -331,25 +326,25 @@ const handleRoleFilter = (e) => {
                             <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Role / Hak Akses</label>
                             <select
                                 v-model="createForm.role"
-                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-[#0E0E11] dark:border-zinc-800 dark:text-zinc-100"
                             >
                                 <option v-for="r in roles" :key="r.id" :value="r.name">{{ r.name }}</option>
                             </select>
                             <p v-if="createForm.errors.role" class="mt-1 text-rose-500 font-medium">{{ createForm.errors.role }}</p>
                         </div>
 
-                        <div class="pt-4 flex justify-end gap-3 border-t border-slate-100 dark:border-slate-800">
+                        <div class="pt-4 flex justify-end gap-3 border-t border-slate-100 dark:border-zinc-800">
                             <button
                                 type="button"
                                 @click="showCreateModal = false"
-                                class="px-4 py-2 text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl dark:bg-slate-800 dark:text-slate-300 font-semibold"
+                                class="px-4 py-2 text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700 font-semibold transition"
                             >
                                 Batal
                             </button>
                             <button
                                 type="submit"
                                 :disabled="createForm.processing"
-                                class="px-4 py-2 text-white bg-brand hover:opacity-90 rounded-xl font-semibold disabled:opacity-50"
+                                class="px-4 py-2 text-white bg-brand hover:opacity-90 rounded-xl font-semibold disabled:opacity-50 transition shadow-2xs"
                             >
                                 Simpan Pengguna
                             </button>
@@ -363,13 +358,13 @@ const handleRoleFilter = (e) => {
         <Teleport to="body">
             <div
                 v-if="showEditModal"
-                class="fixed inset-0 z-50 overflow-y-auto bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4"
+                class="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-xs flex items-center justify-center p-4"
                 @click.self="showEditModal = false"
             >
-                <div class="relative w-full max-w-lg p-6 bg-white rounded-2xl shadow-2xl border border-slate-200 dark:bg-slate-900 dark:border-slate-800">
-                    <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+                <div class="relative w-full max-w-lg p-6 bg-white rounded-2xl shadow-2xl border border-slate-200 dark:bg-[#141417] dark:border-zinc-800">
+                    <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-zinc-800">
                         <h3 class="text-base font-bold text-slate-900 dark:text-white">Edit Data Pengguna</h3>
-                        <button @click="showEditModal = false" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
+                        <button @click="showEditModal = false" class="text-slate-400 hover:text-slate-600 dark:hover:text-zinc-300 p-1 rounded-lg">
                             <X class="w-4 h-4" />
                         </button>
                     </div>
@@ -388,7 +383,7 @@ const handleRoleFilter = (e) => {
                                 v-model="editForm.name"
                                 type="text"
                                 required
-                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-[#0E0E11] dark:border-zinc-800 dark:text-zinc-100"
                             />
                             <p v-if="editForm.errors.name" class="mt-1 text-rose-500 font-medium">{{ editForm.errors.name }}</p>
                         </div>
@@ -399,7 +394,7 @@ const handleRoleFilter = (e) => {
                                 v-model="editForm.email"
                                 type="email"
                                 required
-                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-[#0E0E11] dark:border-zinc-800 dark:text-zinc-100"
                             />
                             <p v-if="editForm.errors.email" class="mt-1 text-rose-500 font-medium">{{ editForm.errors.email }}</p>
                         </div>
@@ -412,7 +407,7 @@ const handleRoleFilter = (e) => {
                                 v-model="editForm.password"
                                 type="password"
                                 placeholder="Minimal 8 karakter"
-                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-[#0E0E11] dark:border-zinc-800 dark:text-zinc-100"
                             />
                             <p v-if="editForm.errors.password" class="mt-1 text-rose-500 font-medium">{{ editForm.errors.password }}</p>
                         </div>
@@ -421,25 +416,25 @@ const handleRoleFilter = (e) => {
                             <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Role / Hak Akses</label>
                             <select
                                 v-model="editForm.role"
-                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-[#0E0E11] dark:border-zinc-800 dark:text-zinc-100"
                             >
                                 <option v-for="r in roles" :key="r.id" :value="r.name">{{ r.name }}</option>
                             </select>
                             <p v-if="editForm.errors.role" class="mt-1 text-rose-500 font-medium">{{ editForm.errors.role }}</p>
                         </div>
 
-                        <div class="pt-4 flex justify-end gap-3 border-t border-slate-100 dark:border-slate-800">
+                        <div class="pt-4 flex justify-end gap-3 border-t border-slate-100 dark:border-zinc-800">
                             <button
                                 type="button"
                                 @click="showEditModal = false"
-                                class="px-4 py-2 text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl dark:bg-slate-800 dark:text-slate-300 font-semibold"
+                                class="px-4 py-2 text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700 font-semibold transition"
                             >
                                 Batal
                             </button>
                             <button
                                 type="submit"
                                 :disabled="editForm.processing"
-                                class="px-4 py-2 text-white bg-brand hover:opacity-90 rounded-xl font-semibold disabled:opacity-50"
+                                class="px-4 py-2 text-white bg-brand hover:opacity-90 rounded-xl font-semibold disabled:opacity-50 transition shadow-2xs"
                             >
                                 Perbarui Pengguna
                             </button>
