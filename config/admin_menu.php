@@ -3,18 +3,8 @@
 return [
     /*
     |--------------------------------------------------------------------------
-    | Admin Navigation Menu Configuration
+    | Admin Navigation Menu Configuration - Toko Grosir & Distributor Sembako
     |--------------------------------------------------------------------------
-    |
-    | Each item can contain:
-    | - title: Display name
-    | - icon: Lucide icon name (e.g. 'LayoutDashboard', 'Users', 'Shield', 'Settings')
-    | - route: Laravel named route
-    | - active: Route pattern for active state (e.g. 'admin.dashboard*')
-    | - permission: Spatie permission string required to view (or null for all authenticated)
-    | - badge: Optional text badge or count
-    | - children: Array of sub-menu items
-    |
     */
 
     'items' => [
@@ -23,22 +13,64 @@ return [
             'icon' => 'LayoutDashboard',
             'route' => 'admin.dashboard',
             'active' => 'admin.dashboard*',
-            'permission' => 'view-dashboard',
+            'permission' => null,
         ],
         [
-            'title' => 'User Management',
+            'title' => 'Kasir (POS)',
+            'icon' => 'ShoppingCart',
+            'route' => 'admin.pos.index',
+            'active' => 'admin.pos.*',
+            'permission' => null,
+            'badge' => 'Cepat',
+        ],
+        [
+            'title' => 'Master Data',
+            'icon' => 'Package',
+            'active' => 'admin.products.*|admin.customers.*',
+            'permission' => null,
+            'children' => [
+                [
+                    'title' => 'Produk & Multi-Satuan',
+                    'route' => 'admin.products.index',
+                    'active' => 'admin.products.*',
+                    'permission' => null,
+                ],
+                [
+                    'title' => 'Pelanggan Grosir',
+                    'route' => 'admin.customers.index',
+                    'active' => 'admin.customers.*',
+                    'permission' => null,
+                ],
+            ],
+        ],
+        [
+            'title' => 'Piutang & Jatuh Tempo',
+            'icon' => 'Clock',
+            'route' => 'admin.debts.index',
+            'active' => 'admin.debts.*',
+            'permission' => null,
+        ],
+        [
+            'title' => 'Laporan & Tutup Buku',
+            'icon' => 'FileText',
+            'route' => 'admin.closure.index',
+            'active' => 'admin.closure.*',
+            'permission' => null,
+        ],
+        [
+            'title' => 'Manajemen User',
             'icon' => 'Users',
-            'active' => 'admin.users.*',
+            'active' => 'admin.users.*|admin.roles.*',
             'permission' => 'view-users',
             'children' => [
                 [
-                    'title' => 'All Users',
+                    'title' => 'Semua Pengguna',
                     'route' => 'admin.users.index',
                     'active' => 'admin.users.index',
                     'permission' => 'view-users',
                 ],
                 [
-                    'title' => 'Roles & Permissions',
+                    'title' => 'Role & Izin Akses',
                     'route' => 'admin.roles.index',
                     'active' => 'admin.roles.*',
                     'permission' => 'view-roles',
@@ -46,14 +78,14 @@ return [
             ],
         ],
         [
-            'title' => 'Settings',
+            'title' => 'Pengaturan Toko',
             'icon' => 'Settings',
             'route' => 'admin.settings.index',
             'active' => 'admin.settings.*',
             'permission' => 'view-settings',
         ],
         [
-            'title' => 'Audit Logs',
+            'title' => 'Audit Log',
             'icon' => 'Activity',
             'route' => 'admin.audit-logs.index',
             'active' => 'admin.audit-logs.*',

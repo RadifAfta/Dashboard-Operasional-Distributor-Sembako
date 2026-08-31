@@ -32,6 +32,13 @@ import {
     Calendar,
     Boxes,
     Activity,
+    ShoppingCart,
+    Clock,
+    CreditCard,
+    Receipt,
+    Calculator,
+    AlertTriangle,
+    TrendingUp,
 } from 'lucide-vue-next';
 
 import { applyBrandTheme } from '@/Utils/brandTheme';
@@ -168,6 +175,13 @@ const iconMap = {
     Boxes,
     Building2,
     Activity,
+    ShoppingCart,
+    Clock,
+    CreditCard,
+    Receipt,
+    Calculator,
+    AlertTriangle,
+    TrendingUp,
 };
 
 const resolveIcon = (iconName) => {
@@ -178,6 +192,10 @@ const isRouteActive = (routePattern) => {
     if (!routePattern) return false;
     const currentRoute = route().current();
     if (!currentRoute) return false;
+
+    if (routePattern.includes('|')) {
+        return routePattern.split('|').some((p) => isRouteActive(p.trim()));
+    }
 
     if (routePattern.endsWith('*')) {
         const prefix = routePattern.replace('*', '');
