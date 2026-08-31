@@ -420,6 +420,7 @@ const submitBatchImport = () => {
                     <table class="w-full text-left text-xs">
                         <thead class="bg-slate-50/80 dark:bg-[#18181C] text-slate-600 dark:text-zinc-400 font-semibold border-b border-slate-200/80 dark:border-zinc-800/80">
                             <tr>
+                                <th class="py-3 px-4 w-12 text-center">No.</th>
                                 <th class="py-3 px-4 w-36">Kode SKU</th>
                                 <th class="py-3 px-4">Nama Barang</th>
                                 <th class="py-3 px-4 w-36">Kategori</th>
@@ -430,11 +431,16 @@ const submitBatchImport = () => {
                         </thead>
                         <tbody class="divide-y divide-slate-200/60 dark:divide-zinc-800/60">
                             <tr
-                                v-for="product in products.data"
+                                v-for="(product, index) in products.data"
                                 :key="product.id"
                                 class="hover:bg-slate-50/80 dark:hover:bg-[#1c1c21] transition-colors"
                                 :class="product.current_stock <= product.min_stock ? 'bg-rose-50/30 dark:bg-rose-950/15' : ''"
                             >
+                                <!-- No. -->
+                                <td class="py-3 px-4 text-center text-slate-400 dark:text-zinc-500 font-mono text-xs">
+                                    {{ (products.current_page - 1) * products.per_page + index + 1 }}
+                                </td>
+
                                 <!-- 1. Kode SKU -->
                                 <td class="py-3 px-4 font-mono font-bold text-slate-900 dark:text-zinc-100">
                                     {{ product.sku }}
@@ -503,7 +509,7 @@ const submitBatchImport = () => {
                             </tr>
 
                             <tr v-if="products.data.length === 0">
-                                <td colspan="6" class="py-12 text-center text-slate-400 dark:text-zinc-500">
+                                <td colspan="7" class="py-12 text-center text-slate-400 dark:text-zinc-500">
                                     <Package class="w-10 h-10 mx-auto text-slate-300 dark:text-zinc-700 mb-2" />
                                     <p class="font-medium">Tidak ada data barang yang sesuai filter.</p>
                                     <button @click="resetFilters" class="mt-2 text-xs text-brand hover:underline font-bold cursor-pointer">

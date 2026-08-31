@@ -16,6 +16,7 @@ import {
     X,
     ChevronLeft,
     ChevronRight,
+    Eye,
 } from 'lucide-vue-next';
 
 const props = defineProps({
@@ -50,6 +51,15 @@ const handleSearch = () => {
 
 const formatRupiah = (val) => {
     return 'Rp ' + Number(val || 0).toLocaleString('id-ID');
+};
+
+// Detail Modal
+const isDetailModalOpen = ref(false);
+const selectedCustomer = ref(null);
+
+const openDetailModal = (customer) => {
+    selectedCustomer.value = customer;
+    isDetailModalOpen.value = true;
 };
 
 // Modal Create & Edit
@@ -195,6 +205,7 @@ const executeDelete = () => {
                     <table class="w-full text-left text-xs">
                         <thead class="bg-slate-50/80 dark:bg-[#18181C] text-slate-600 dark:text-zinc-400 font-semibold border-b border-slate-200/80 dark:border-zinc-800/80">
                             <tr>
+                                <th class="py-3 px-4 w-12 text-center">No.</th>
                                 <th class="py-3 px-4">Kode Mitra</th>
                                 <th class="py-3 px-4">Nama Toko & Kontak</th>
                                 <th class="py-3 px-4">Alamat Usaha</th>
@@ -205,12 +216,24 @@ const executeDelete = () => {
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-200/60 dark:divide-zinc-800/60">
-                            <tr v-for="c in customers.data" :key="c.id" class="hover:bg-slate-50/80 dark:hover:bg-[#1c1c21] transition-colors">
+                            <tr v-for="(c, index) in customers.data" :key="c.id" class="hover:bg-slate-50/80 dark:hover:bg-[#1c1c21] transition-colors">
+                                <!-- No. -->
+                                <td class="py-3 px-4 text-center text-slate-400 dark:text-zinc-500 font-mono text-xs">
+                                    {{ (customers.current_page - 1) * customers.per_page + index + 1 }}
+                                </td>
+
                                 <td class="py-3 px-4 font-mono font-bold text-slate-900 dark:text-zinc-100">
                                     {{ c.code }}
                                 </td>
                                 <td class="py-3 px-4">
-                                    <div class="font-bold text-slate-900 dark:text-zinc-100">{{ c.name }}</div>
+                                    <button
+                                        type="button"
+                                        @click="openDetailModal(c)"
+                                        class="font-bold text-slate-900 dark:text-zinc-100 hover:text-brand transition-colors text-left cursor-pointer"
+                                        title="Klik untuk melihat detail mitra"
+                                    >
+                                        {{ c.name }}
+                                    </button>
                                     <div v-if="c.phone" class="text-[11px] text-slate-500 dark:text-zinc-400 flex items-center gap-1 mt-0.5">
                                         <Phone class="w-3 h-3 text-slate-400" />
                                         <span>{{ c.phone }}</span>
@@ -240,21 +263,30 @@ const executeDelete = () => {
                                 </td>
                                 <td class="py-3 px-4 text-right space-x-1 whitespace-nowrap">
                                     <button
+                                        @click="openDetailModal(c)"
+                                        class="p-1.5 rounded-lg text-slate-400 hover:text-brand hover:bg-brand/10 transition-colors cursor-pointer"
+                                        title="Lihat Detail Pelanggan"
+                                    >
+                                        <Eye class="w-4 h-4" />
+                                    </button>
+                                    <button
                                         @click="openEditModal(c)"
                                         class="p-1.5 rounded-lg text-slate-400 hover:text-brand hover:bg-brand/10 transition-colors cursor-pointer"
+                                        title="Edit Data Mitra"
                                     >
                                         <Edit class="w-4 h-4" />
                                     </button>
                                     <button
                                         @click="confirmDelete(c)"
                                         class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors cursor-pointer"
+                                        title="Hapus Mitra"
                                     >
                                         <Trash2 class="w-4 h-4" />
                                     </button>
                                 </td>
                             </tr>
                             <tr v-if="customers.data.length === 0">
-                                <td colspan="7" class="py-10 text-center text-slate-400 dark:text-zinc-500 font-medium">
+                                <td colspan="8" class="py-10 text-center text-slate-400 dark:text-zinc-500 font-medium">
                                     Belum ada pelanggan grosir terdaftar.
                                 </td>
                             </tr>
@@ -406,6 +438,122 @@ const executeDelete = () => {
                         class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-sm cursor-pointer"
                     >
                         Ya, Hapus
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detail Customer Modal -->
+        <div
+            v-if="isDetailModalOpen"
+            class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs"
+        >
+            <div class="bg-white dark:bg-[#141417] rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 dark:border-zinc-800 space-y-5">
+                <!-- Modal Header -->
+                <div class="flex items-start justify-between border-b border-slate-200/80 dark:border-zinc-800/80 pb-4">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="px-2 py-0.5 rounded-md bg-brand/10 text-brand text-xs font-mono font-bold border border-brand/20">
+                                {{ selectedCustomer?.code }}
+                            </span>
+                            <span
+                                class="px-2 py-0.5 rounded-md text-xs font-bold"
+                                :class="selectedCustomer?.status === 'active' ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300' : 'bg-slate-100 dark:bg-zinc-800 text-slate-500'"
+                            >
+                                {{ selectedCustomer?.status === 'active' ? 'Mitra Aktif' : 'Nonaktif' }}
+                            </span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-1.5">
+                            {{ selectedCustomer?.name }}
+                        </h3>
+                    </div>
+                    <button
+                        @click="isDetailModalOpen = false"
+                        class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 transition-colors cursor-pointer"
+                    >
+                        <X class="w-5 h-5" />
+                    </button>
+                </div>
+
+                <!-- Informasi Kontak & Alamat -->
+                <div class="space-y-2.5 text-xs">
+                    <div class="p-3 rounded-xl bg-slate-50 dark:bg-zinc-900/60 border border-slate-200/60 dark:border-zinc-800/60 flex items-center justify-between">
+                        <span class="text-slate-500 dark:text-zinc-400 flex items-center gap-1.5 font-medium">
+                            <Phone class="w-3.5 h-3.5 text-slate-400" />
+                            Kontak / WhatsApp:
+                        </span>
+                        <span class="font-bold text-slate-900 dark:text-zinc-100">
+                            {{ selectedCustomer?.phone || 'Tidak ada nomor telepon' }}
+                        </span>
+                    </div>
+
+                    <div class="p-3 rounded-xl bg-slate-50 dark:bg-zinc-900/60 border border-slate-200/60 dark:border-zinc-800/60">
+                        <span class="text-slate-500 dark:text-zinc-400 block font-medium mb-1 flex items-center gap-1.5">
+                            <MapPin class="w-3.5 h-3.5 text-slate-400" />
+                            Alamat Usaha / Pengiriman:
+                        </span>
+                        <p class="text-slate-800 dark:text-zinc-200 leading-relaxed font-medium">
+                            {{ selectedCustomer?.address || 'Alamat belum diatur' }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Informasi Plafon & Hutang Berjalan -->
+                <div>
+                    <h4 class="text-xs font-bold text-slate-800 dark:text-zinc-200 mb-2">
+                        Status Kredit & Piutang Berjalan
+                    </h4>
+                    <div class="grid grid-cols-2 gap-3 text-xs">
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-zinc-900/60 border border-slate-200/60 dark:border-zinc-800/60">
+                            <span class="text-slate-400 dark:text-zinc-500 block text-[11px]">Batas Plafon Kredit</span>
+                            <span class="font-bold text-slate-900 dark:text-zinc-100 text-sm mt-0.5 block">
+                                {{ formatRupiah(selectedCustomer?.credit_limit) }}
+                            </span>
+                        </div>
+
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-zinc-900/60 border border-slate-200/60 dark:border-zinc-800/60">
+                            <span class="text-slate-400 dark:text-zinc-500 block text-[11px]">Total Hutang Aktif</span>
+                            <span
+                                class="font-extrabold text-sm mt-0.5 block"
+                                :class="selectedCustomer?.current_debt > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400'"
+                            >
+                                {{ formatRupiah(selectedCustomer?.current_debt) }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="mt-2.5 p-3 rounded-xl bg-slate-50 dark:bg-zinc-900/40 border border-slate-200 dark:border-zinc-800 flex items-center justify-between text-xs">
+                        <span class="text-slate-500 dark:text-zinc-400">Sisa Kuota Limit Kredit:</span>
+                        <span class="font-bold text-emerald-600 dark:text-emerald-400">
+                            {{ formatRupiah(Math.max(0, (selectedCustomer?.credit_limit || 0) - (selectedCustomer?.current_debt || 0))) }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="pt-2 flex items-center justify-end gap-2 border-t border-slate-200/80 dark:border-zinc-800/80">
+                    <button
+                        @click="isDetailModalOpen = false"
+                        type="button"
+                        class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-zinc-800 hover:bg-slate-200 dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-300 font-semibold text-xs transition-colors cursor-pointer"
+                    >
+                        Tutup
+                    </button>
+                    <Link
+                        v-if="selectedCustomer?.current_debt > 0"
+                        :href="route('admin.debts.index', { search: selectedCustomer?.name })"
+                        class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs shadow-sm transition-all flex items-center gap-1.5"
+                    >
+                        <Clock class="w-3.5 h-3.5" />
+                        <span>Riwayat Piutang</span>
+                    </Link>
+                    <button
+                        @click="isDetailModalOpen = false; openEditModal(selectedCustomer)"
+                        type="button"
+                        class="px-4 py-2 rounded-xl bg-brand hover:opacity-90 text-white font-bold text-xs shadow-sm shadow-brand/20 transition-all cursor-pointer flex items-center gap-1.5"
+                    >
+                        <Edit class="w-3.5 h-3.5" />
+                        <span>Edit Data Mitra</span>
                     </button>
                 </div>
             </div>
