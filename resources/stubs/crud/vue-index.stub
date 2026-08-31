@@ -175,37 +175,37 @@ const submitBulkDelete = () => {
                     </button>
                 </template>
 
-                <!-- Code Cell: Clean Pill -->
+                <!-- Code Cell: Plain Mono Value (No border, no icon) -->
                 <template #cell(code)="{ value }">
-                    <span class="inline-flex items-center px-2 py-0.5 rounded-md font-mono text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80">
+                    <span class="font-mono text-xs font-medium text-slate-800 dark:text-zinc-200">
                         {{ value }}
                     </span>
                 </template>
 
-                <!-- Name Cell: Bold with High Contrast -->
+                <!-- Name Cell: Plain Text Value -->
                 <template #cell(name)="{ value }">
-                    <span class="font-bold text-xs text-slate-900 dark:text-white">
+                    <span class="text-xs font-medium text-slate-900 dark:text-zinc-100">
                         {{ value }}
                     </span>
                 </template>
 
-                <!-- Description Cell: Fallback Dash -->
+                <!-- Description Cell: Plain Text Value -->
                 <template #cell(description)="{ value }">
-                    <span class="text-xs text-slate-500 dark:text-slate-400">
+                    <span class="text-xs text-slate-500 dark:text-zinc-400">
                         {{ value || '—' }}
                     </span>
                 </template>
 
-                <!-- Status Badge Cell -->
+                <!-- Status Cell: Plain Text Value without border pill -->
                 <template #cell(status)="{ value }">
-                    <Badge :variant="value === 'active' ? 'success' : 'neutral'" size="sm">
+                    <span class="text-xs font-medium" :class="value === 'active' ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-500 dark:text-zinc-400'">
                         {{ value === 'active' ? 'Aktif' : 'Non-Aktif' }}
-                    </Badge>
+                    </span>
                 </template>
 
-                <!-- Date Cell -->
+                <!-- Date Cell: Plain Text Value -->
                 <template #cell(created_at)="{ value }">
-                    <span class="text-xs font-mono text-slate-500 dark:text-slate-400">
+                    <span class="text-xs font-mono text-slate-500 dark:text-zinc-400">
                         {{ new Date(value).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) }}
                     </span>
                 </template>
@@ -235,16 +235,17 @@ const submitBulkDelete = () => {
         </div>
 
         <!-- Modal Tambah Data -->
+        <!-- Modal Tambah Data -->
         <Teleport to="body">
             <div
                 v-if="showCreateModal"
-                class="fixed inset-0 z-50 overflow-y-auto bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4"
+                class="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-xs flex items-center justify-center p-4"
                 @click.self="showCreateModal = false"
             >
-                <div class="relative w-full max-w-lg p-6 bg-white rounded-2xl shadow-2xl border border-slate-200 dark:bg-slate-900 dark:border-slate-800">
-                    <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+                <div class="relative w-full max-w-lg p-6 bg-white rounded-2xl shadow-2xl border border-slate-200 dark:bg-[#141417] dark:border-zinc-800">
+                    <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-zinc-800">
                         <h3 class="text-base font-bold text-slate-900 dark:text-white">Tambah {{humanName}} Baru</h3>
-                        <button @click="showCreateModal = false" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
+                        <button @click="showCreateModal = false" class="text-slate-400 hover:text-slate-600 dark:hover:text-zinc-300 p-1 rounded-lg">
                             <X class="w-4 h-4" />
                         </button>
                     </div>
@@ -265,7 +266,7 @@ const submitBulkDelete = () => {
                                 type="text"
                                 required
                                 placeholder="Contoh: {{codeExample}}"
-                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white uppercase font-mono"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-[#0E0E11] dark:border-zinc-800 dark:text-zinc-100 uppercase font-mono"
                             />
                             <p v-if="createForm.errors.code" class="mt-1 text-rose-500 font-medium">{{ createForm.errors.code }}</p>
                         </div>
@@ -277,7 +278,7 @@ const submitBulkDelete = () => {
                                 type="text"
                                 required
                                 placeholder="Masukkan nama..."
-                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-[#0E0E11] dark:border-zinc-800 dark:text-zinc-100"
                             />
                             <p v-if="createForm.errors.name" class="mt-1 text-rose-500 font-medium">{{ createForm.errors.name }}</p>
                         </div>
@@ -286,7 +287,7 @@ const submitBulkDelete = () => {
                             <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Status Operasional *</label>
                             <select
                                 v-model="createForm.status"
-                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-[#0E0E11] dark:border-zinc-800 dark:text-zinc-100"
                             >
                                 <option value="active">Aktif</option>
                                 <option value="inactive">Non-Aktif</option>
@@ -299,22 +300,22 @@ const submitBulkDelete = () => {
                                 v-model="createForm.description"
                                 rows="3"
                                 placeholder="Tambahkan catatan tambahan jika diperlukan..."
-                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-[#0E0E11] dark:border-zinc-800 dark:text-zinc-100"
                             ></textarea>
                         </div>
 
-                        <div class="pt-4 flex justify-end gap-3 border-t border-slate-100 dark:border-slate-800">
+                        <div class="pt-4 flex justify-end gap-3 border-t border-slate-100 dark:border-zinc-800">
                             <button
                                 type="button"
                                 @click="showCreateModal = false"
-                                class="px-4 py-2 text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl dark:bg-slate-800 dark:text-slate-300 font-semibold"
+                                class="px-4 py-2 text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700 font-semibold transition"
                             >
                                 Batal
                             </button>
                             <button
                                 type="submit"
                                 :disabled="createForm.processing"
-                                class="px-4 py-2 text-white bg-brand hover:opacity-90 rounded-xl font-semibold disabled:opacity-50"
+                                class="px-4 py-2 text-white bg-brand hover:opacity-90 rounded-xl font-semibold disabled:opacity-50 transition shadow-2xs"
                             >
                                 Simpan Data
                             </button>
@@ -328,13 +329,13 @@ const submitBulkDelete = () => {
         <Teleport to="body">
             <div
                 v-if="showEditModal"
-                class="fixed inset-0 z-50 overflow-y-auto bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4"
+                class="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-xs flex items-center justify-center p-4"
                 @click.self="showEditModal = false"
             >
-                <div class="relative w-full max-w-lg p-6 bg-white rounded-2xl shadow-2xl border border-slate-200 dark:bg-slate-900 dark:border-slate-800">
-                    <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+                <div class="relative w-full max-w-lg p-6 bg-white rounded-2xl shadow-2xl border border-slate-200 dark:bg-[#141417] dark:border-zinc-800">
+                    <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-zinc-800">
                         <h3 class="text-base font-bold text-slate-900 dark:text-white">Edit Data {{humanName}}</h3>
-                        <button @click="showEditModal = false" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
+                        <button @click="showEditModal = false" class="text-slate-400 hover:text-slate-600 dark:hover:text-zinc-300 p-1 rounded-lg">
                             <X class="w-4 h-4" />
                         </button>
                     </div>
@@ -346,7 +347,7 @@ const submitBulkDelete = () => {
                                 v-model="editForm.code"
                                 type="text"
                                 required
-                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white uppercase font-mono"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-[#0E0E11] dark:border-zinc-800 dark:text-zinc-100 uppercase font-mono"
                             />
                             <p v-if="editForm.errors.code" class="mt-1 text-rose-500 font-medium">{{ editForm.errors.code }}</p>
                         </div>
@@ -357,7 +358,7 @@ const submitBulkDelete = () => {
                                 v-model="editForm.name"
                                 type="text"
                                 required
-                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-[#0E0E11] dark:border-zinc-800 dark:text-zinc-100"
                             />
                             <p v-if="editForm.errors.name" class="mt-1 text-rose-500 font-medium">{{ editForm.errors.name }}</p>
                         </div>
@@ -366,7 +367,7 @@ const submitBulkDelete = () => {
                             <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Status Operasional *</label>
                             <select
                                 v-model="editForm.status"
-                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-[#0E0E11] dark:border-zinc-800 dark:text-zinc-100"
                             >
                                 <option value="active">Aktif</option>
                                 <option value="inactive">Non-Aktif</option>
@@ -378,22 +379,22 @@ const submitBulkDelete = () => {
                             <textarea
                                 v-model="editForm.description"
                                 rows="3"
-                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-[#0E0E11] dark:border-zinc-800 dark:text-zinc-100"
                             ></textarea>
                         </div>
 
-                        <div class="pt-4 flex justify-end gap-3 border-t border-slate-100 dark:border-slate-800">
+                        <div class="pt-4 flex justify-end gap-3 border-t border-slate-100 dark:border-zinc-800">
                             <button
                                 type="button"
                                 @click="showEditModal = false"
-                                class="px-4 py-2 text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl dark:bg-slate-800 dark:text-slate-300 font-semibold"
+                                class="px-4 py-2 text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700 font-semibold transition"
                             >
                                 Batal
                             </button>
                             <button
                                 type="submit"
                                 :disabled="editForm.processing"
-                                class="px-4 py-2 text-white bg-brand hover:opacity-90 rounded-xl font-semibold disabled:opacity-50"
+                                class="px-4 py-2 text-white bg-brand hover:opacity-90 rounded-xl font-semibold disabled:opacity-50 transition shadow-2xs"
                             >
                                 Perbarui Data
                             </button>
