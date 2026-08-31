@@ -3,161 +3,141 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Product;
+use App\Models\Transaction;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
-use Spatie\Permission\Models\Role;
 
 class DashboardController extends Controller
 {
     /**
-     * Display the enterprise operations dashboard.
+     * Display the Distributor Toko Sembako operations dashboard.
      */
     public function index(Request $request): Response
     {
-        $totalUsers = User::count();
-        $totalRoles = Role::count();
-        $verifiedUsers = User::whereNotNull('email_verified_at')->count();
+        $today = Carbon::today();
 
-        // Operational Metrics
-        $operationalStats = [
-            'total_users' => $totalUsers,
-            'total_roles' => $totalRoles,
-            'verified_users' => $verifiedUsers,
-            'compliance_score' => $totalUsers > 0 ? round(($verifiedUsers / $totalUsers) * 100, 1) : 100,
-            'total_requests_today' => '148,290',
-            'requests_growth' => '+8.4%',
-            'pending_approvals' => 3,
-            'uptime_sla' => '99.98%',
-            'avg_latency_ms' => 32,
-            'active_sessions' => max(1, (int) round($totalUsers * 0.4)),
+        // 1. Four Core Metric Cards
+        // Omzet Hari Ini (Rp) - Seluruh transaksi selesai / tercatat hari ini
+        $omzetToday = (float) Transaction::whereDate('created_at', $today)->sum('total_amount');
+
+        // Estimasi Laba Kotor Hari Ini (Rp) - Revenue dikurangi HPP
+        $profitToday = (float) Transaction::whereDate('created_at', $today)->sum('profit_total');
+
+        // Total Piutang Jatuh Tempo (Rp) - Transaksi tempo yang belum lunas dan due_date < today
+        $overdueDebtsQuery = Transaction::where('payment_status', '!=', 'paid')
+            ->whereNotNull('due_date')
+            ->whereDate('due_date', '<', $today);
+
+        $overdueDebtTotal = (float) $overdueDebtsQuery->sum('remaining_debt');
+        $overdueDebtCount = $overdueDebtsQuery->count();
+
+        // Jumlah Barang Kritis (Stok <= Stok Minimum)
+        $criticalProductsQuery = Product::where('status', 'active')
+            ->whereColumn('current_stock', '<=', 'min_stock');
+
+        $criticalStockCount = $criticalProductsQuery->count();
+
+        // Omzet Kemarin untuk perbandingan persentase
+        $omzetYesterday = (float) Transaction::whereDate('created_at', Carbon::yesterday())->sum('total_amount');
+        $omzetGrowthPct = $omzetYesterday > 0
+            ? round((($omzetToday - $omzetYesterday) / $omzetYesterday) * 100, 1)
+            : 0;
+
+        // 2. Grafik Penjualan 7 Hari: Komparasi Transaksi Tunai vs Tempo
+        $chartLabels = [];
+        $cashSeries = [];
+        $creditSeries = [];
+        $totalDailySeries = [];
+
+        for ($i = 6; $i >= 0; $i--) {
+            $date = Carbon::today()->subDays($i);
+            $dayName = $i === 0 ? 'Hari Ini' : $date->translatedFormat('d M');
+            $chartLabels[] = $dayName;
+
+            // Tunai / Transfer (Kas Langsung)
+            $cashAmount = (float) Transaction::whereDate('created_at', $date)
+                ->whereIn('payment_method', ['cash', 'transfer'])
+                ->sum('total_amount');
+
+            // Tempo (Kredit / Piutang)
+            $creditAmount = (float) Transaction::whereDate('created_at', $date)
+                ->where('payment_method', 'credit')
+                ->sum('total_amount');
+
+            $cashSeries[] = $cashAmount;
+            $creditSeries[] = $creditAmount;
+            $totalDailySeries[] = $cashAmount + $creditAmount;
+        }
+
+        $salesChart = [
+            'labels' => $chartLabels,
+            'cash_series' => $cashSeries,
+            'credit_series' => $creditSeries,
+            'total_daily_series' => $totalDailySeries,
+            'cash_total' => array_sum($cashSeries),
+            'credit_total' => array_sum($creditSeries),
+            'grand_total' => array_sum($totalDailySeries),
         ];
 
-        // Hourly throughput for the precision operational chart
-        $throughputData = [
-            'labels' => ['00:00', '03:00', '06:00', '09:00', '12:00', '15:00', '18:00', '21:00', '23:59'],
-            'data' => [4200, 2100, 5800, 18900, 24500, 28900, 21400, 16200, 9800],
-            'baseline' => 15000,
-            'peak' => 28900,
-        ];
+        // 3. Tabel Quick Alert: 5 barang dengan stok paling mendekati 0
+        $quickAlertProducts = Product::with('units')
+            ->where('status', 'active')
+            ->orderBy('current_stock', 'asc')
+            ->limit(5)
+            ->get()
+            ->map(function ($product) {
+                $stockRatio = $product->min_stock > 0
+                    ? round(($product->current_stock / $product->min_stock) * 100)
+                    : 0;
 
-        // Enterprise Infrastructure Services Status
-        $services = [
-            [
-                'name' => 'Database Cluster (MySQL)',
-                'driver' => config('database.default'),
-                'status' => 'operational',
-                'latency' => '1.2 ms',
-                'pool' => '12 / 50 koneksi',
-            ],
-            [
-                'name' => 'Background Queue Worker',
-                'driver' => config('queue.default'),
-                'status' => 'operational',
-                'latency' => '0 pending',
-                'pool' => 'Worker ID: q-01 (Idle)',
-            ],
-            [
-                'name' => 'High-Speed Memory Cache',
-                'driver' => config('cache.default'),
-                'status' => 'operational',
-                'latency' => '98.6% Hit Ratio',
-                'pool' => 'Cache Invalidation OK',
-            ],
-            [
-                'name' => 'Audit Security & Guard',
-                'driver' => 'web (Sanctum/Session)',
-                'status' => 'operational',
-                'latency' => 'RBAC Enforced',
-                'pool' => 'Zero security violations',
-            ],
-        ];
+                return [
+                    'id' => $product->id,
+                    'sku' => $product->sku,
+                    'name' => $product->name,
+                    'category' => $product->category,
+                    'current_stock' => (float) $product->current_stock,
+                    'min_stock' => (float) $product->min_stock,
+                    'base_unit' => $product->base_unit,
+                    'selling_price' => (float) $product->selling_price,
+                    'is_critical' => $product->current_stock <= $product->min_stock,
+                    'stock_ratio' => min(100, max(0, $stockRatio)),
+                    'units_count' => $product->units->count(),
+                ];
+            });
 
-        // Audit Trail Feed (Siapa mengakses apa & kapan)
-        $auditLogs = [
-            [
-                'id' => 'AUD-9021',
-                'actor' => 'Super Administrator',
-                'email' => 'admin@example.com',
-                'event' => 'AUTH_SIGNIN_SUCCESS',
-                'resource' => 'Session Security Token',
-                'ip_address' => '127.0.0.1 (Localhost)',
-                'status' => 'SUCCESS',
-                'severity' => 'info',
-                'timestamp' => now()->subMinutes(8)->format('Y-m-d H:i:s'),
-            ],
-            [
-                'id' => 'AUD-9020',
-                'actor' => 'System Manager',
-                'email' => 'manager@example.com',
-                'event' => 'RBAC_ROLE_CHECK',
-                'resource' => 'Role: Admin (Matrix View)',
-                'ip_address' => '192.168.1.105',
-                'status' => 'SUCCESS',
-                'severity' => 'info',
-                'timestamp' => now()->subMinutes(24)->format('Y-m-d H:i:s'),
-            ],
-            [
-                'id' => 'AUD-9019',
-                'actor' => 'System Internal',
-                'email' => 'system@daemon',
-                'event' => 'DB_AUTO_MIGRATION',
-                'resource' => 'Settings Schema v13.2',
-                'ip_address' => '127.0.0.1 (CLI)',
-                'status' => 'SUCCESS',
-                'severity' => 'notice',
-                'timestamp' => now()->subHours(1)->format('Y-m-d H:i:s'),
-            ],
-            [
-                'id' => 'AUD-9018',
-                'actor' => 'Ahmad Fauzi',
-                'email' => 'ahmad@example.com',
-                'event' => 'PASSWORD_RESET_REQ',
-                'resource' => 'Auth Identity Provider',
-                'ip_address' => '114.124.201.88',
-                'status' => 'PENDING_APPROVAL',
-                'severity' => 'warning',
-                'timestamp' => now()->subHours(2)->format('Y-m-d H:i:s'),
-            ],
-            [
-                'id' => 'AUD-9017',
-                'actor' => 'Super Administrator',
-                'email' => 'admin@example.com',
-                'event' => 'CONFIG_TIMEZONE_SET',
-                'resource' => 'App Setting: Asia/Jakarta',
-                'ip_address' => '127.0.0.1 (Localhost)',
-                'status' => 'SUCCESS',
-                'severity' => 'info',
-                'timestamp' => now()->subHours(4)->format('Y-m-d H:i:s'),
-            ],
-            [
-                'id' => 'AUD-9016',
-                'actor' => 'External Gateway',
-                'email' => 'api.gateway@node-4',
-                'event' => 'RATE_LIMIT_CHECK',
-                'resource' => 'API Route /admin',
-                'ip_address' => '10.0.2.14',
-                'status' => 'SUCCESS',
-                'severity' => 'info',
-                'timestamp' => now()->subHours(6)->format('Y-m-d H:i:s'),
-            ],
-        ];
-
-        $systemStats = [
-            'laravel_version' => app()->version(),
-            'php_version' => PHP_VERSION,
-            'environment' => strtoupper(config('app.env', 'PRODUCTION')),
-            'db_driver' => config('database.default'),
-            'host' => gethostname(),
-        ];
+        // Transaksi Terbaru Hari Ini
+        $recentTransactions = Transaction::with(['customer', 'cashier'])
+            ->latest()
+            ->limit(6)
+            ->get()
+            ->map(fn ($t) => [
+                'id' => $t->id,
+                'invoice_number' => $t->invoice_number,
+                'customer_name' => $t->customer ? $t->customer->name : 'Pelanggan Tunai Toko',
+                'payment_method' => $t->payment_method,
+                'payment_status' => $t->payment_status,
+                'total_amount' => (float) $t->total_amount,
+                'time_ago' => $t->created_at->diffForHumans(),
+                'created_at' => $t->created_at->format('H:i'),
+                'is_overdue' => $t->is_overdue,
+            ]);
 
         return Inertia::render('Admin/Dashboard', [
-            'stats' => $operationalStats,
-            'throughput' => $throughputData,
-            'services' => $services,
-            'auditLogs' => $auditLogs,
-            'systemStats' => $systemStats,
+            'metrics' => [
+                'omzet_today' => $omzetToday,
+                'omzet_growth_pct' => $omzetGrowthPct,
+                'profit_today' => $profitToday,
+                'profit_margin_pct' => $omzetToday > 0 ? round(($profitToday / $omzetToday) * 100, 1) : 0,
+                'overdue_debt_total' => $overdueDebtTotal,
+                'overdue_debt_count' => $overdueDebtCount,
+                'critical_stock_count' => $criticalStockCount,
+            ],
+            'salesChart' => $salesChart,
+            'quickAlertProducts' => $quickAlertProducts,
+            'recentTransactions' => $recentTransactions,
         ]);
     }
 }
