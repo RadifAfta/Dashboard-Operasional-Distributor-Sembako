@@ -207,7 +207,7 @@ const onHexTextInput = (raw) => {
                 </div>
 
                 <!-- Tab 1: General Settings -->
-                <div v-show="activeTab === 'general'" class="p-6 bg-white border border-slate-200/80 rounded-2xl shadow-sm dark:bg-slate-900 dark:border-slate-800/80 space-y-5">
+                <div v-show="activeTab === 'general'" class="p-6 bg-white border border-slate-200/80 rounded-2xl shadow-sm dark:bg-[#141417] dark:border-zinc-800/80 space-y-5">
                     <div>
                         <label class="block text-xs font-bold text-slate-800 dark:text-slate-200 mb-1">
                             Nama Aplikasi / Website
@@ -217,7 +217,7 @@ const onHexTextInput = (raw) => {
                             v-if="getSetting('app_name')"
                             v-model="getSetting('app_name').value"
                             type="text"
-                            class="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                            class="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-zinc-800 dark:border-zinc-700 dark:text-white"
                         />
                     </div>
 
@@ -230,7 +230,7 @@ const onHexTextInput = (raw) => {
                             v-if="getSetting('app_description')"
                             v-model="getSetting('app_description').value"
                             rows="3"
-                            class="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                            class="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-zinc-800 dark:border-zinc-700 dark:text-white"
                         ></textarea>
                     </div>
 
@@ -243,7 +243,7 @@ const onHexTextInput = (raw) => {
                             v-if="getSetting('contact_email')"
                             v-model="getSetting('contact_email').value"
                             type="email"
-                            class="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                            class="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-zinc-800 dark:border-zinc-700 dark:text-white"
                         />
                     </div>
 
@@ -268,8 +268,8 @@ const onHexTextInput = (raw) => {
                                 :class="[
                                     'flex items-center gap-3 p-2.5 rounded-xl border text-left transition-all',
                                     currentBrandColor === key
-                                        ? 'border-slate-900 bg-slate-100/70 dark:border-white dark:bg-slate-800/90 shadow-2xs ring-1 ring-slate-900 dark:ring-white'
-                                        : 'border-slate-200 hover:border-slate-300 dark:border-slate-800 dark:hover:border-slate-700 bg-white dark:bg-slate-900'
+                                        ? 'border-slate-900 bg-slate-100/70 dark:border-white dark:bg-zinc-800 shadow-2xs ring-1 ring-slate-900 dark:ring-white'
+                                        : 'border-slate-200 hover:border-slate-300 dark:border-zinc-800 dark:hover:border-zinc-700 bg-white dark:bg-zinc-900'
                                 ]"
                             >
                                 <span
@@ -290,7 +290,7 @@ const onHexTextInput = (raw) => {
                         </div>
 
                         <!-- Custom HEX Color Picker & Input Box -->
-                        <div class="mt-4 p-3.5 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div class="mt-4 p-3.5 bg-slate-50 dark:bg-zinc-900/60 rounded-xl border border-slate-200 dark:border-zinc-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                             <div>
                                 <p class="text-xs font-bold text-slate-800 dark:text-slate-200">
                                     Bebas Masukkan Kode Warna Klien (HEX Custom)
@@ -305,7 +305,7 @@ const onHexTextInput = (raw) => {
                                         type="color"
                                         :value="customHexValue"
                                         @input="onCustomColorInput($event.target.value)"
-                                        class="w-8 h-8 rounded-lg border border-slate-300 dark:border-slate-600 cursor-pointer bg-transparent p-0 overflow-hidden"
+                                        class="w-8 h-8 rounded-lg border border-slate-300 dark:border-zinc-700 cursor-pointer bg-transparent p-0 overflow-hidden"
                                         title="Buka pemilih warna (Color Picker)"
                                     />
                                 </div>
@@ -317,7 +317,7 @@ const onHexTextInput = (raw) => {
                                         @input="onHexTextInput($event.target.value)"
                                         maxlength="6"
                                         placeholder="4F46E5"
-                                        class="w-28 pl-6 pr-2.5 py-1.5 text-xs font-mono font-bold uppercase bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-brand/20 focus:border-brand"
+                                        class="w-28 pl-6 pr-2.5 py-1.5 text-xs font-mono font-bold uppercase bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-lg focus:ring-2 focus:ring-brand/20 focus:border-brand"
                                     />
                                 </div>
                             </div>
@@ -326,7 +326,7 @@ const onHexTextInput = (raw) => {
                 </div>
 
                 <!-- Tab 2: Security Settings -->
-                <div v-show="activeTab === 'security'" class="p-6 bg-white border border-slate-200/80 rounded-2xl shadow-sm dark:bg-slate-900 dark:border-slate-800/80 space-y-5">
+                <div v-show="activeTab === 'security'" class="p-6 bg-white border border-slate-200/80 rounded-2xl shadow-sm dark:bg-[#141417] dark:border-zinc-800/80 space-y-5">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-xs font-bold text-slate-800 dark:text-slate-200">
@@ -344,13 +344,13 @@ const onHexTextInput = (raw) => {
                                 @change="getSetting('enable_registration').value = $event.target.checked ? '1' : '0'"
                                 class="sr-only peer"
                             />
-                            <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-brand"></div>
+                            <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-zinc-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-zinc-600 peer-checked:bg-brand"></div>
                         </label>
                     </div>
                 </div>
 
                 <!-- Tab 3: Localization Settings -->
-                <div v-show="activeTab === 'localization'" class="p-6 bg-white border border-slate-200/80 rounded-2xl shadow-sm dark:bg-slate-900 dark:border-slate-800/80 space-y-5">
+                <div v-show="activeTab === 'localization'" class="p-6 bg-white border border-slate-200/80 rounded-2xl shadow-sm dark:bg-[#141417] dark:border-zinc-800/80 space-y-5">
                     <div>
                         <label class="block text-xs font-bold text-slate-800 dark:text-slate-200 mb-1">
                             Zona Waktu Default
@@ -358,7 +358,7 @@ const onHexTextInput = (raw) => {
                         <select
                             v-if="getSetting('timezone')"
                             v-model="getSetting('timezone').value"
-                            class="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                            class="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-zinc-800 dark:border-zinc-700 dark:text-white"
                         >
                             <option value="Asia/Jakarta">Asia/Jakarta (WIB)</option>
                             <option value="Asia/Makassar">Asia/Makassar (WITA)</option>
@@ -375,13 +375,13 @@ const onHexTextInput = (raw) => {
                             v-if="getSetting('currency_symbol')"
                             v-model="getSetting('currency_symbol').value"
                             type="text"
-                            class="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                            class="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-zinc-800 dark:border-zinc-700 dark:text-white"
                         />
                     </div>
                 </div>
 
                 <!-- Tab 4: Interactive Notification & Error Handling Playground -->
-                <div v-show="activeTab === 'notifications'" class="p-6 bg-white border border-slate-200/80 rounded-2xl shadow-sm dark:bg-slate-900 dark:border-slate-800/80 space-y-6">
+                <div v-show="activeTab === 'notifications'" class="p-6 bg-white border border-slate-200/80 rounded-2xl shadow-sm dark:bg-[#141417] dark:border-zinc-800/80 space-y-6">
                     <div>
                         <h3 class="text-sm font-bold text-slate-900 dark:text-white">
                             Pusat Pengujian Notifikasi & Penanganan Error

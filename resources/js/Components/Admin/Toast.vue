@@ -110,7 +110,7 @@ const getProgressBarColor = (type) => {
             <div
                 v-for="toast in toasts"
                 :key="toast.id"
-                class="pointer-events-auto relative overflow-hidden flex flex-col bg-white border border-slate-200 border-l-4 rounded-xl shadow-xl dark:bg-[#0F172A] dark:border-slate-800"
+                class="pointer-events-auto relative overflow-hidden flex flex-col bg-white border border-slate-200 border-l-4 rounded-xl shadow-xl dark:bg-[#18181B] dark:border-zinc-800"
                 :class="getBorderColor(toast.type)"
             >
                 <div class="p-4 flex items-start gap-3">
@@ -141,7 +141,7 @@ const getProgressBarColor = (type) => {
                 <!-- Subtle Countdown Progress Bar -->
                 <div
                     v-if="toast.duration > 0"
-                    class="h-0.5 w-full bg-slate-100 dark:bg-slate-800 overflow-hidden"
+                    class="h-0.5 w-full bg-slate-100 dark:bg-zinc-800 overflow-hidden"
                 >
                     <div
                         class="h-full transition-all duration-100 ease-linear"

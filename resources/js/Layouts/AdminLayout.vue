@@ -220,16 +220,16 @@ const logout = () => {
         <div
             v-if="sidebarOpen"
             @click="sidebarOpen = false"
-            class="fixed inset-0 z-40 bg-slate-950/70 backdrop-blur-xs lg:hidden transition-opacity"
+            class="fixed inset-0 z-40 bg-black/75 backdrop-blur-xs lg:hidden transition-opacity"
         ></div>
 
         <!-- 🖥️ KONSEP 3: The Unified Studio App Window Shell -->
-        <div class="flex-1 w-full h-full rounded-2xl border border-slate-300 dark:border-slate-800 shadow-2xl overflow-hidden flex flex-row bg-white dark:bg-[#070A12] relative">
+        <div class="flex-1 w-full h-full rounded-2xl border border-slate-300 dark:border-zinc-800 shadow-2xl overflow-hidden flex flex-row bg-white dark:bg-[#0C0C0E] relative">
             
             <!-- Left Studio Pane: Sidebar (Seamless Light & Dark Adaptation) -->
             <aside
                 :class="[
-                    'flex flex-col bg-slate-50 text-slate-800 border-r border-slate-200/90 dark:bg-[#0A0E18] dark:text-white dark:border-slate-800/80 h-full transition-all duration-200 ease-in-out shrink-0 z-30',
+                    'flex flex-col bg-slate-50 text-slate-800 border-r border-slate-200/90 dark:bg-[#121215] dark:text-white dark:border-zinc-800/80 h-full transition-all duration-200 ease-in-out shrink-0 z-30',
                     sidebarCollapsed ? 'w-16' : 'w-60',
                     sidebarOpen ? 'fixed inset-y-0 left-0 z-50 w-64 shadow-2xl' : 'hidden lg:flex'
                 ]"
@@ -286,7 +286,7 @@ const logout = () => {
                             <span v-show="!sidebarCollapsed" class="truncate">{{ item.title }}</span>
                             <span
                                 v-if="item.badge && !sidebarCollapsed"
-                                class="ml-auto px-1.5 py-0.5 text-[10px] font-mono font-bold rounded bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
+                                class="ml-auto px-1.5 py-0.5 text-[10px] font-mono font-bold rounded bg-slate-200 text-slate-700 dark:bg-zinc-800 dark:text-zinc-300"
                             >
                                 {{ item.badge }}
                             </span>
@@ -347,13 +347,13 @@ const logout = () => {
                 </div>
 
                 <!-- Sidebar Footer User Capsule -->
-                <div class="p-2.5 border-t border-slate-200 dark:border-slate-800/80">
-                    <div class="flex items-center justify-between p-1.5 rounded-lg border border-slate-200/90 bg-white dark:border-slate-800 dark:bg-slate-900/60 shadow-2xs">
+                <div class="p-2.5 border-t border-slate-200 dark:border-zinc-800/80">
+                    <div class="flex items-center justify-between p-1.5 rounded-lg border border-slate-200/90 bg-white dark:border-zinc-800 dark:bg-[#18181B] shadow-2xs">
                         <div class="flex items-center gap-2 overflow-hidden">
                             <img
                                 :src="user?.avatar_url || 'https://ui-avatars.com/api/?name=Admin'"
                                 alt="Avatar"
-                                class="w-6 h-6 rounded-md object-cover ring-1 ring-slate-200 dark:ring-slate-700 shrink-0"
+                                class="w-6 h-6 rounded-md object-cover shrink-0"
                             />
                             <div v-show="!sidebarCollapsed" class="flex flex-col truncate">
                                 <span class="text-xs font-bold text-slate-900 dark:text-white truncate">{{ user?.name }}</span>
@@ -366,7 +366,7 @@ const logout = () => {
                             type="button"
                             @click="logout"
                             title="Keluar"
-                            class="p-1 text-slate-400 hover:text-rose-600 hover:bg-slate-100 dark:hover:text-rose-400 dark:hover:bg-slate-800 rounded-md transition"
+                            class="p-1 text-slate-400 hover:text-rose-600 hover:bg-slate-100 dark:hover:text-rose-400 dark:hover:bg-zinc-800 rounded-md transition"
                         >
                             <LogOut class="w-3.5 h-3.5" />
                         </button>
@@ -375,10 +375,10 @@ const logout = () => {
             </aside>
 
             <!-- Right Studio Pane: The Work Canvas with Independent Scroll -->
-            <div class="flex-1 flex flex-col h-full min-w-0 overflow-hidden bg-[#F8FAFC] dark:bg-[#080C16]">
+            <div class="flex-1 flex flex-col h-full min-w-0 overflow-hidden bg-[#F8FAFC] dark:bg-[#0E0E11]">
                 
                 <!-- Internal Studio Topbar Console -->
-                <header class="h-14 px-4 sm:px-6 border-b border-slate-200 dark:border-slate-800/80 bg-white/95 dark:bg-[#0A0E18]/90 backdrop-blur-md flex items-center justify-between shrink-0 z-20">
+                <header class="h-14 px-4 sm:px-6 border-b border-slate-200 dark:border-zinc-800/80 bg-white/95 dark:bg-[#121215]/90 backdrop-blur-md flex items-center justify-between shrink-0 z-20">
                     <div class="flex items-center gap-3 min-w-0">
                         <!-- Mobile Hamburger -->
                         <button
@@ -399,7 +399,7 @@ const logout = () => {
                             <Menu class="w-4 h-4" />
                         </button>
 
-                        <div class="h-4 w-px bg-slate-200 dark:bg-slate-800 hidden sm:block"></div>
+                        <div class="h-4 w-px bg-slate-200 dark:bg-zinc-800 hidden sm:block"></div>
 
                         <!-- Dynamic Breadcrumb Navigation -->
                         <nav class="flex items-center gap-1.5 text-xs truncate" aria-label="Breadcrumb">
@@ -434,20 +434,20 @@ const logout = () => {
                         <button
                             type="button"
                             @click="showCommandPalette = true"
-                            class="hidden sm:flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900 text-xs text-slate-500 dark:text-slate-400 cursor-pointer hover:border-slate-300 dark:hover:border-slate-700 hover:text-slate-700 dark:hover:text-slate-300 transition group"
+                            class="hidden sm:flex items-center gap-2 px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 dark:border-zinc-800 dark:bg-[#18181B] text-xs text-slate-500 dark:text-zinc-400 cursor-pointer hover:border-slate-300 dark:hover:border-zinc-700 hover:text-slate-700 dark:hover:text-zinc-300 transition group"
                             title="Buka Command Palette (Ctrl + K)"
                         >
-                            <Search class="w-3.5 h-3.5 group-hover:text-indigo-600 transition" />
+                            <Search class="w-3.5 h-3.5 group-hover:text-brand transition" />
                             <span class="text-[11px]">Cari menu...</span>
-                            <kbd class="px-1.5 py-0.5 text-[10px] font-mono bg-white border border-slate-200 rounded text-slate-500 dark:bg-slate-800 dark:border-slate-700 group-hover:border-indigo-300 transition">Ctrl K</kbd>
+                            <kbd class="px-1.5 py-0.5 text-[10px] font-mono bg-white border border-slate-200 rounded text-slate-500 dark:bg-zinc-800 dark:border-zinc-700 group-hover:border-brand/40 transition">Ctrl K</kbd>
                         </button>
 
                         <!-- Telemetry Pill -->
-                        <div class="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-50 border border-slate-200 dark:bg-slate-900 dark:border-slate-800 text-[11px] font-mono font-medium">
+                        <div class="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-50 border border-slate-200 dark:bg-[#18181B] dark:border-zinc-800 text-[11px] font-mono font-medium">
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                             <span class="text-emerald-600 dark:text-emerald-400">24ms</span>
-                            <span class="text-slate-300 dark:text-slate-700">&bull;</span>
-                            <span class="text-slate-500 dark:text-slate-400">SLA 99.98%</span>
+                            <span class="text-slate-300 dark:text-zinc-700">&bull;</span>
+                            <span class="text-slate-500 dark:text-zinc-400">SLA 99.98%</span>
                         </div>
 
                         <!-- Dark / Light Toggle -->
@@ -461,19 +461,19 @@ const logout = () => {
                             <Moon v-else class="w-4 h-4 text-slate-500" />
                         </button>
 
-                        <div class="h-4 w-px bg-slate-200 dark:bg-slate-800"></div>
+                        <div class="h-4 w-px bg-slate-200 dark:bg-zinc-800"></div>
 
                         <!-- Profile Dropdown -->
                         <div class="relative">
                             <button
                                 type="button"
                                 @click="userDropdownOpen = !userDropdownOpen"
-                                class="flex items-center gap-1.5 p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                                class="flex items-center gap-1.5 p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-zinc-800 transition"
                             >
                                 <img
                                     :src="user?.avatar_url || 'https://ui-avatars.com/api/?name=Admin'"
                                     alt="Avatar"
-                                    class="w-7 h-7 rounded-md object-cover ring-1 ring-slate-200 dark:ring-slate-700"
+                                    class="w-7 h-7 rounded-md object-cover"
                                 />
                                 <ChevronDown class="w-3 h-3 text-slate-400" />
                             </button>
@@ -486,16 +486,16 @@ const logout = () => {
 
                             <div
                                 v-if="userDropdownOpen"
-                                class="absolute right-0 mt-2 w-52 p-1 bg-white border border-slate-200 rounded-xl shadow-xl dark:bg-[#0D121F] dark:border-slate-800 z-50 text-xs text-slate-700 dark:text-slate-300 animate-in fade-in zoom-in-95 duration-100"
+                                class="absolute right-0 mt-2 w-52 p-1 bg-white border border-slate-200 rounded-xl shadow-xl dark:bg-[#18181B] dark:border-zinc-800 z-50 text-xs text-slate-700 dark:text-zinc-300 animate-in fade-in zoom-in-95 duration-100"
                             >
-                                <div class="px-3 py-2 border-b border-slate-100 dark:border-slate-800/80 mb-1">
+                                <div class="px-3 py-2 border-b border-slate-100 dark:border-zinc-800/80 mb-1">
                                     <p class="font-bold text-slate-900 dark:text-white truncate">{{ user?.name }}</p>
-                                    <p class="text-[11px] font-mono text-slate-400 truncate">{{ user?.email }}</p>
+                                    <p class="text-[11px] font-mono text-slate-400 dark:text-zinc-500 truncate">{{ user?.email }}</p>
                                 </div>
 
                                 <Link
                                     :href="route('profile.edit')"
-                                    class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                                    class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-zinc-800 transition"
                                 >
                                     <UserIcon class="w-3.5 h-3.5 text-slate-400" />
                                     <span>Profil Pengguna</span>
@@ -503,13 +503,13 @@ const logout = () => {
 
                                 <Link
                                     :href="route('admin.settings.index')"
-                                    class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                                    class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-zinc-800 transition"
                                 >
                                     <Settings class="w-3.5 h-3.5 text-slate-400" />
                                     <span>Konfigurasi Sistem</span>
                                 </Link>
 
-                                <div class="my-1 border-t border-slate-100 dark:border-slate-800/80"></div>
+                                <div class="my-1 border-t border-slate-100 dark:border-zinc-800/80"></div>
 
                                 <button
                                     type="button"
@@ -531,7 +531,7 @@ const logout = () => {
                     </div>
 
                     <!-- Minimal Enterprise Footer -->
-                    <footer class="pt-8 pb-3 border-t border-slate-200/80 dark:border-slate-800/70 text-xs text-slate-400 dark:text-slate-500 font-mono flex flex-col sm:flex-row items-center justify-between gap-2 max-w-7xl mx-auto">
+                    <footer class="pt-8 pb-3 border-t border-slate-200/80 dark:border-zinc-800/70 text-xs text-slate-400 dark:text-zinc-500 font-mono flex flex-col sm:flex-row items-center justify-between gap-2 max-w-7xl mx-auto">
                         <span>&copy; {{ new Date().getFullYear() }} {{ appSettings.name }} &bull; Enterprise Admin Console</span>
                         <span class="flex items-center gap-2">
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>

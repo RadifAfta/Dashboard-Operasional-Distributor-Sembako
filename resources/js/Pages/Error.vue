@@ -51,7 +51,7 @@ const details = computed(() => {
                 subtitle: '404 Not Found',
                 description: 'Halaman yang Anda tuju tidak dapat ditemukan. Alamat tautan mungkin salah ketik, telah dihapus, atau dipindahkan ke lokasi lain.',
                 icon: FileQuestion,
-                color: 'text-slate-600 bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700',
+                color: 'text-slate-600 bg-slate-100 dark:bg-zinc-800 border-slate-200 dark:border-zinc-700',
             };
     }
 });
@@ -62,10 +62,10 @@ const reload = () => {
 </script>
 
 <template>
-    <div class="min-h-screen bg-slate-50 dark:bg-[#090D16] text-slate-900 dark:text-slate-100 font-sans flex items-center justify-center p-4 sm:p-6 selection:bg-slate-900 selection:text-white">
+    <div class="min-h-screen bg-slate-50 dark:bg-[#09090B] text-slate-900 dark:text-slate-100 font-sans flex items-center justify-center p-4 sm:p-6 selection:bg-slate-900 selection:text-white">
         <Head :title="details.title" />
 
-        <div class="w-full max-w-lg p-8 bg-white border border-slate-200 rounded-3xl shadow-xl dark:bg-[#0D121F] dark:border-slate-800 text-center space-y-6">
+        <div class="w-full max-w-lg p-8 bg-white border border-slate-200 rounded-3xl shadow-xl dark:bg-[#18181B] dark:border-zinc-800 text-center space-y-6">
             <!-- Centered Status Icon -->
             <div
                 :class="[
@@ -77,7 +77,7 @@ const reload = () => {
             </div>
 
             <div class="space-y-2">
-                <span class="px-2.5 py-1 text-xs font-mono font-bold uppercase rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                <span class="px-2.5 py-1 text-xs font-mono font-bold uppercase rounded-full bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400">
                     {{ details.subtitle }}
                 </span>
                 <h1 class="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white">
@@ -93,7 +93,7 @@ const reload = () => {
                 <button
                     type="button"
                     @click="reload"
-                    class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 transition"
+                    class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700 transition"
                 >
                     <RefreshCw class="w-3.5 h-3.5" />
                     <span>Muat Ulang Halaman</span>

@@ -30,7 +30,7 @@ defineProps({
 </script>
 
 <template>
-    <div class="relative p-6 bg-white border border-slate-200/80 rounded-2xl shadow-sm dark:bg-slate-900 dark:border-slate-800/80 transition-all hover:shadow-md">
+    <div class="relative p-6 bg-white border border-slate-200/80 rounded-2xl shadow-sm dark:bg-[#141417] dark:border-zinc-800/80 transition-all hover:shadow-md">
         <div class="flex items-center justify-between">
             <p class="text-sm font-medium text-slate-500 dark:text-slate-400">
                 {{ title }}

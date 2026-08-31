@@ -200,12 +200,12 @@ onUnmounted(() => {
         >
             <div
                 v-if="modelValue"
-                class="fixed inset-0 z-50 overflow-y-auto bg-slate-950/60 backdrop-blur-xs flex items-start justify-center pt-16 sm:pt-24 p-4"
+                class="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-xs flex items-start justify-center pt-16 sm:pt-24 p-4"
                 @click.self="close"
             >
-                <div class="relative w-full max-w-xl bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden dark:bg-[#0D121F] dark:border-slate-800 animate-in fade-in zoom-in-95 duration-150">
+                <div class="relative w-full max-w-xl bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden dark:bg-[#18181B] dark:border-zinc-800 animate-in fade-in zoom-in-95 duration-150">
                     <!-- Search Input Bar -->
-                    <div class="flex items-center gap-3 px-4 py-3.5 border-b border-slate-100 dark:border-slate-800/80">
+                    <div class="flex items-center gap-3 px-4 py-3.5 border-b border-slate-100 dark:border-zinc-800/80">
                         <Search class="w-4 h-4 text-slate-400 shrink-0" />
                         <input
                             ref="searchInput"
@@ -214,7 +214,7 @@ onUnmounted(() => {
                             placeholder="Ketik nama halaman, fitur, atau aksi cepat..."
                             class="w-full bg-transparent border-0 p-0 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:ring-0 dark:text-white"
                         />
-                        <kbd class="px-1.5 py-0.5 text-[10px] font-mono bg-slate-100 border border-slate-200 rounded text-slate-500 dark:bg-slate-800 dark:border-slate-700">
+                        <kbd class="px-1.5 py-0.5 text-[10px] font-mono bg-slate-100 border border-slate-200 rounded text-slate-500 dark:bg-zinc-800 dark:border-zinc-700">
                             ESC
                         </kbd>
                     </div>
@@ -274,7 +274,7 @@ onUnmounted(() => {
                                             'px-1.5 py-0.5 text-[9px] font-mono font-bold rounded',
                                             flatItems[activeIndex]?.id === item.id
                                                 ? 'bg-white/20 text-white'
-                                                : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'
+                                                : 'bg-slate-100 text-slate-500 dark:bg-zinc-800 dark:text-zinc-400'
                                         ]"
                                     >
                                         {{ item.badge }}
@@ -289,13 +289,13 @@ onUnmounted(() => {
                     </div>
 
                     <!-- Footer Keyboard Hints -->
-                    <div class="px-4 py-2 bg-slate-50 border-t border-slate-100 dark:bg-[#0A0E18] dark:border-slate-800/80 flex items-center justify-between text-[10px] font-mono text-slate-400">
+                    <div class="px-4 py-2 bg-slate-50 border-t border-slate-100 dark:bg-[#121215] dark:border-zinc-800/80 flex items-center justify-between text-[10px] font-mono text-slate-400">
                         <div class="flex items-center gap-3">
                             <span class="flex items-center gap-1">
-                                <kbd class="px-1 py-0.2 bg-white border border-slate-200 rounded dark:bg-slate-800 dark:border-slate-700">&uarr;&darr;</kbd> Navigasi
+                                <kbd class="px-1 py-0.2 bg-white border border-slate-200 rounded dark:bg-zinc-800 dark:border-zinc-700">&uarr;&darr;</kbd> Navigasi
                             </span>
                             <span class="flex items-center gap-1">
-                                <kbd class="px-1 py-0.2 bg-white border border-slate-200 rounded dark:bg-slate-800 dark:border-slate-700">&crarr;</kbd> Buka
+                                <kbd class="px-1 py-0.2 bg-white border border-slate-200 rounded dark:bg-zinc-800 dark:border-zinc-700">&crarr;</kbd> Buka
                             </span>
                         </div>
                         <span>Raycast-Speed Engine</span>

@@ -23,7 +23,7 @@ const variantClasses = computed(() => {
         case 'info':
             return 'bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-950/40 dark:text-sky-400 dark:border-sky-800';
         case 'neutral':
-            return 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700';
+            return 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-zinc-800 dark:text-zinc-300 dark:border-zinc-700';
         case 'primary':
         default:
             return 'bg-brand/10 text-brand border-brand/25 dark:bg-brand/20 dark:text-brand dark:border-brand/40';

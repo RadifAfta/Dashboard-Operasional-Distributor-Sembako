@@ -149,7 +149,7 @@ const toggleGroup = (form, groupPermissions) => {
                 <div
                     v-for="role in roles"
                     :key="role.id"
-                    class="flex flex-col justify-between p-6 bg-white border border-slate-200/80 rounded-2xl shadow-sm dark:bg-slate-900 dark:border-slate-800/80 hover:shadow-md transition"
+                    class="flex flex-col justify-between p-6 bg-white border border-slate-200/80 rounded-2xl shadow-sm dark:bg-[#141417] dark:border-zinc-800/80 hover:shadow-md transition"
                 >
                     <div>
                         <div class="flex items-start justify-between">
@@ -182,7 +182,7 @@ const toggleGroup = (form, groupPermissions) => {
                                 <span
                                     v-for="p in role.permissions.slice(0, 6)"
                                     :key="p.id"
-                                    class="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300"
+                                    class="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 text-slate-600 dark:bg-zinc-800 dark:text-zinc-300"
                                 >
                                     {{ p.name }}
                                 </span>
@@ -197,15 +197,15 @@ const toggleGroup = (form, groupPermissions) => {
                     </div>
 
                     <!-- Card Bottom Actions -->
-                    <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                        <span class="text-[11px] text-slate-400">
+                    <div class="mt-6 pt-4 border-t border-slate-100 dark:border-zinc-800 flex items-center justify-between">
+                        <span class="text-[11px] text-slate-400 dark:text-zinc-500">
                             {{ role.name === 'Super Admin' ? 'System Protected' : 'Custom Role' }}
                         </span>
                         <div class="flex items-center gap-2">
                             <button
                                 type="button"
                                 @click="openEditModal(role)"
-                                class="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:text-brand bg-slate-50 hover:bg-slate-100 rounded-lg dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 transition"
+                                class="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:text-brand bg-slate-50 hover:bg-slate-100 rounded-lg dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700 transition"
                             >
                                 <Edit2 class="w-3.5 h-3.5" />
                                 <span>Edit Matrix</span>
@@ -229,13 +229,13 @@ const toggleGroup = (form, groupPermissions) => {
         <Teleport to="body">
             <div
                 v-if="showCreateModal"
-                class="fixed inset-0 z-50 overflow-y-auto bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4"
+                class="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-xs flex items-center justify-center p-4"
                 @click.self="showCreateModal = false"
             >
-                <div class="relative w-full max-w-2xl p-6 bg-white rounded-2xl shadow-2xl border border-slate-200 dark:bg-slate-900 dark:border-slate-800">
-                    <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+                <div class="relative w-full max-w-2xl p-6 bg-white rounded-2xl shadow-2xl border border-slate-200 dark:bg-[#141417] dark:border-zinc-800">
+                    <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-zinc-800">
                         <h3 class="text-base font-bold text-slate-900 dark:text-white">Buat Role Baru</h3>
-                        <button @click="showCreateModal = false" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
+                        <button @click="showCreateModal = false" class="text-slate-400 hover:text-slate-600 dark:hover:text-zinc-300 p-1 rounded-lg">
                             <X class="w-4 h-4" />
                         </button>
                     </div>
@@ -255,7 +255,7 @@ const toggleGroup = (form, groupPermissions) => {
                                 type="text"
                                 required
                                 placeholder="Contoh: Editor, Staff Keuangan"
-                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-[#0E0E11] dark:border-zinc-800 dark:text-zinc-100"
                             />
                             <p v-if="createForm.errors.name" class="mt-1 text-rose-500 font-medium">{{ createForm.errors.name }}</p>
                         </div>
@@ -266,7 +266,7 @@ const toggleGroup = (form, groupPermissions) => {
                                 <div
                                     v-for="(perms, groupName) in permissionsGrouped"
                                     :key="groupName"
-                                    class="p-3 bg-slate-50 border border-slate-200/60 rounded-xl dark:bg-slate-800/40 dark:border-slate-700/60"
+                                    class="p-3 bg-slate-50 border border-slate-200/60 rounded-xl dark:bg-zinc-900/60 dark:border-zinc-800/80"
                                 >
                                     <div class="flex items-center justify-between mb-2">
                                         <span class="font-bold uppercase tracking-wider text-[11px] text-slate-700 dark:text-slate-300">
@@ -299,20 +299,20 @@ const toggleGroup = (form, groupPermissions) => {
                             </div>
                         </div>
 
-                        <div class="pt-4 flex justify-end gap-3 border-t border-slate-100 dark:border-slate-800">
+                        <div class="pt-4 flex justify-end gap-3 border-t border-slate-100 dark:border-zinc-800">
                             <button
                                 type="button"
                                 @click="showCreateModal = false"
-                                class="px-4 py-2 text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl dark:bg-slate-800 dark:text-slate-300 font-semibold"
+                                class="px-4 py-2 text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700 font-semibold transition"
                             >
                                 Batal
                             </button>
                             <button
                                 type="submit"
                                 :disabled="createForm.processing"
-                                class="px-4 py-2 text-white bg-brand hover:opacity-90 rounded-xl font-semibold disabled:opacity-50"
+                                class="px-4 py-2 text-white bg-brand hover:opacity-90 rounded-xl font-semibold disabled:opacity-50 transition shadow-2xs"
                             >
-                                Simpan Role
+                                Buat Role
                             </button>
                         </div>
                     </form>
@@ -324,13 +324,13 @@ const toggleGroup = (form, groupPermissions) => {
         <Teleport to="body">
             <div
                 v-if="showEditModal"
-                class="fixed inset-0 z-50 overflow-y-auto bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4"
+                class="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-xs flex items-center justify-center p-4"
                 @click.self="showEditModal = false"
             >
-                <div class="relative w-full max-w-2xl p-6 bg-white rounded-2xl shadow-2xl border border-slate-200 dark:bg-slate-900 dark:border-slate-800">
-                    <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+                <div class="relative w-full max-w-2xl p-6 bg-white rounded-2xl shadow-2xl border border-slate-200 dark:bg-[#141417] dark:border-zinc-800">
+                    <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-zinc-800">
                         <h3 class="text-base font-bold text-slate-900 dark:text-white">Edit Hak Akses Role: {{ editForm.name }}</h3>
-                        <button @click="showEditModal = false" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
+                        <button @click="showEditModal = false" class="text-slate-400 hover:text-slate-600 dark:hover:text-zinc-300 p-1 rounded-lg">
                             <X class="w-4 h-4" />
                         </button>
                     </div>
@@ -350,7 +350,7 @@ const toggleGroup = (form, groupPermissions) => {
                                 type="text"
                                 required
                                 :disabled="editForm.name === 'Super Admin'"
-                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-slate-800 dark:border-slate-700 dark:text-white disabled:opacity-60 disabled:bg-slate-100"
+                                class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-[#0E0E11] dark:border-zinc-800 dark:text-zinc-100 disabled:opacity-60 disabled:bg-slate-100"
                             />
                             <p v-if="editForm.errors.name" class="mt-1 text-rose-500 font-medium">{{ editForm.errors.name }}</p>
                         </div>
@@ -361,7 +361,7 @@ const toggleGroup = (form, groupPermissions) => {
                                 <div
                                     v-for="(perms, groupName) in permissionsGrouped"
                                     :key="groupName"
-                                    class="p-3 bg-slate-50 border border-slate-200/60 rounded-xl dark:bg-slate-800/40 dark:border-slate-700/60"
+                                    class="p-3 bg-slate-50 border border-slate-200/60 rounded-xl dark:bg-zinc-900/60 dark:border-zinc-800/80"
                                 >
                                     <div class="flex items-center justify-between mb-2">
                                         <span class="font-bold uppercase tracking-wider text-[11px] text-slate-700 dark:text-slate-300">
@@ -394,18 +394,18 @@ const toggleGroup = (form, groupPermissions) => {
                             </div>
                         </div>
 
-                        <div class="pt-4 flex justify-end gap-3 border-t border-slate-100 dark:border-slate-800">
+                        <div class="pt-4 flex justify-end gap-3 border-t border-slate-100 dark:border-zinc-800">
                             <button
                                 type="button"
                                 @click="showEditModal = false"
-                                class="px-4 py-2 text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl dark:bg-slate-800 dark:text-slate-300 font-semibold"
+                                class="px-4 py-2 text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700 font-semibold transition"
                             >
                                 Batal
                             </button>
                             <button
                                 type="submit"
                                 :disabled="editForm.processing"
-                                class="px-4 py-2 text-white bg-brand hover:opacity-90 rounded-xl font-semibold disabled:opacity-50"
+                                class="px-4 py-2 text-white bg-brand hover:opacity-90 rounded-xl font-semibold disabled:opacity-50 transition shadow-2xs"
                             >
                                 Simpan Perubahan
                             </button>

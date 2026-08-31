@@ -126,7 +126,7 @@ const exportAuditCSV = () => {
                 <div class="flex items-center gap-2.5 shrink-0">
                     <select
                         v-model="selectedRange"
-                        class="py-1.5 px-3 text-xs font-semibold bg-white border border-slate-200 rounded-lg focus:ring-1 focus:ring-slate-900 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-200 shadow-2xs"
+                        class="py-1.5 px-3 text-xs font-semibold bg-white border border-slate-200 rounded-lg focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-[#18181B] dark:border-zinc-800 dark:text-zinc-200 shadow-2xs"
                     >
                         <option value="today">Hari Ini (24 Jam)</option>
                         <option value="7d">7 Hari Terakhir</option>
@@ -136,7 +136,7 @@ const exportAuditCSV = () => {
                     <button
                         type="button"
                         @click="exportAuditCSV"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 dark:bg-slate-900 dark:text-slate-200 dark:border-slate-800 dark:hover:bg-slate-800 transition shadow-2xs"
+                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 dark:bg-[#18181B] dark:text-zinc-200 dark:border-zinc-800 dark:hover:bg-zinc-800 transition shadow-2xs"
                     >
                         <Download class="w-3.5 h-3.5" />
                         <span>Ekspor CSV</span>
@@ -147,9 +147,9 @@ const exportAuditCSV = () => {
             <!-- 2. Precision Operational KPI Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <!-- Card 1: Throughput -->
-                <div class="spotlight-card p-5 bg-white border border-slate-200 rounded-xl dark:bg-[#0D121F] dark:border-slate-800/90 shadow-2xs">
+                <div class="spotlight-card p-5 bg-white border border-slate-200 rounded-xl dark:bg-[#141417] dark:border-zinc-800/90 shadow-2xs">
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-mono font-medium uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                        <span class="text-xs font-mono font-medium uppercase tracking-wider text-slate-400 dark:text-zinc-500">
                             Daily Throughput
                         </span>
                         <Activity class="w-4 h-4 text-slate-400" />
@@ -163,16 +163,16 @@ const exportAuditCSV = () => {
                             {{ stats.requests_growth }}
                         </span>
                     </div>
-                    <div class="mt-2 text-[11px] text-slate-400 font-mono flex items-center justify-between border-t border-slate-100 dark:border-slate-800/80 pt-2">
+                    <div class="mt-2 text-[11px] text-slate-400 font-mono flex items-center justify-between border-t border-slate-100 dark:border-zinc-800/80 pt-2">
                         <span>Laju Permintaan API</span>
-                        <span class="text-slate-600 dark:text-slate-300 font-semibold">{{ stats.active_sessions }} Sesi Aktif</span>
+                        <span class="text-slate-600 dark:text-zinc-300 font-semibold">{{ stats.active_sessions }} Sesi Aktif</span>
                     </div>
                 </div>
 
                 <!-- Card 2: Pending Approvals -->
-                <div class="spotlight-card p-5 bg-white border border-slate-200 rounded-xl dark:bg-[#0D121F] dark:border-slate-800/90 shadow-2xs">
+                <div class="spotlight-card p-5 bg-white border border-slate-200 rounded-xl dark:bg-[#141417] dark:border-zinc-800/90 shadow-2xs">
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-mono font-medium uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                        <span class="text-xs font-mono font-medium uppercase tracking-wider text-slate-400 dark:text-zinc-500">
                             Pending Review
                         </span>
                         <AlertCircle class="w-4 h-4 text-amber-500" />
@@ -185,18 +185,18 @@ const exportAuditCSV = () => {
                             Action Req.
                         </span>
                     </div>
-                    <div class="mt-2 text-[11px] text-slate-400 font-mono flex items-center justify-between border-t border-slate-100 dark:border-slate-800/80 pt-2">
+                    <div class="mt-2 text-[11px] text-slate-400 font-mono flex items-center justify-between border-t border-slate-100 dark:border-zinc-800/80 pt-2">
                         <span>Otorisasi Hak Akses</span>
-                        <Link :href="route('admin.roles.index')" class="text-indigo-600 dark:text-indigo-400 font-semibold hover:underline">
+                        <Link :href="route('admin.roles.index')" class="text-brand font-semibold hover:underline">
                             Tinjau Sekarang &rarr;
                         </Link>
                     </div>
                 </div>
 
                 <!-- Card 3: Security & Compliance -->
-                <div class="spotlight-card p-5 bg-white border border-slate-200 rounded-xl dark:bg-[#0D121F] dark:border-slate-800/90 shadow-2xs">
+                <div class="spotlight-card p-5 bg-white border border-slate-200 rounded-xl dark:bg-[#141417] dark:border-zinc-800/90 shadow-2xs">
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-mono font-medium uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                        <span class="text-xs font-mono font-medium uppercase tracking-wider text-slate-400 dark:text-zinc-500">
                             Compliance Score
                         </span>
                         <Shield class="w-4 h-4 text-emerald-500" />
@@ -209,16 +209,16 @@ const exportAuditCSV = () => {
                             STRICT RBAC
                         </span>
                     </div>
-                    <div class="mt-2 text-[11px] text-slate-400 font-mono flex items-center justify-between border-t border-slate-100 dark:border-slate-800/80 pt-2">
+                    <div class="mt-2 text-[11px] text-slate-400 font-mono flex items-center justify-between border-t border-slate-100 dark:border-zinc-800/80 pt-2">
                         <span>{{ stats.verified_users }} dari {{ stats.total_users }} Akun</span>
                         <span class="text-emerald-600 dark:text-emerald-400 font-semibold">Audit Lulus</span>
                     </div>
                 </div>
 
                 <!-- Card 4: Uptime SLA & Latency -->
-                <div class="spotlight-card p-5 bg-white border border-slate-200 rounded-xl dark:bg-[#0D121F] dark:border-slate-800/90 shadow-2xs">
+                <div class="spotlight-card p-5 bg-white border border-slate-200 rounded-xl dark:bg-[#141417] dark:border-zinc-800/90 shadow-2xs">
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-mono font-medium uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                        <span class="text-xs font-mono font-medium uppercase tracking-wider text-slate-400 dark:text-zinc-500">
                             Uptime & Latency
                         </span>
                         <Server class="w-4 h-4 text-slate-400" />
@@ -254,7 +254,7 @@ const exportAuditCSV = () => {
                     <div
                         v-for="(service, idx) in services"
                         :key="idx"
-                        class="p-4 bg-white border border-slate-200 rounded-xl dark:bg-[#0D121F] dark:border-slate-800/90 flex flex-col justify-between"
+                        class="p-4 bg-white border border-slate-200 rounded-xl dark:bg-[#141417] dark:border-zinc-800/90 flex flex-col justify-between"
                     >
                         <div>
                             <div class="flex items-center justify-between mb-1.5">
@@ -268,7 +268,7 @@ const exportAuditCSV = () => {
                             </div>
                             <p class="text-[11px] font-mono text-slate-400">Driver: {{ service.driver }}</p>
                         </div>
-                        <div class="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] font-mono text-slate-500 dark:text-slate-400">
+                        <div class="mt-3 pt-2 border-t border-slate-100 dark:border-zinc-800/80 flex items-center justify-between text-[11px] font-mono text-slate-500 dark:text-zinc-400">
                             <span>{{ service.latency }}</span>
                             <span class="truncate max-w-[110px]">{{ service.pool }}</span>
                         </div>
@@ -277,14 +277,14 @@ const exportAuditCSV = () => {
             </div>
 
             <!-- 4. Precision Throughput & Operational Load Chart -->
-            <div class="p-5 sm:p-6 bg-white border border-slate-200 rounded-xl dark:bg-[#0D121F] dark:border-slate-800/90 shadow-2xs">
+            <div class="p-5 sm:p-6 bg-white border border-slate-200 rounded-xl dark:bg-[#141417] dark:border-zinc-800/90 shadow-2xs">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                     <div>
                         <div class="flex items-center gap-2">
                             <h3 class="text-sm font-bold text-slate-900 dark:text-white font-mono uppercase tracking-wider">
                                 Aktivitas Permintaan Sistem (24 Jam Terakhir)
                             </h3>
-                            <span class="px-2 py-0.5 text-[10px] font-mono font-bold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                            <span class="px-2 py-0.5 text-[10px] font-mono font-bold rounded bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-300">
                                 Peak: {{ throughput.peak.toLocaleString() }} req/hr
                             </span>
                         </div>
@@ -293,13 +293,13 @@ const exportAuditCSV = () => {
                         </p>
                     </div>
 
-                    <div class="flex items-center gap-4 text-xs font-mono text-slate-500 dark:text-slate-400">
+                    <div class="flex items-center gap-4 text-xs font-mono text-slate-500 dark:text-zinc-400">
                         <span class="flex items-center gap-1.5">
                             <span class="w-2.5 h-0.5 bg-brand inline-block"></span>
                             <span>Throughput Aktual</span>
                         </span>
                         <span class="flex items-center gap-1.5">
-                            <span class="w-2.5 h-0.5 bg-slate-300 dark:bg-slate-700 inline-block border-dashed"></span>
+                            <span class="w-2.5 h-0.5 bg-slate-300 dark:bg-zinc-700 inline-block border-dashed"></span>
                             <span>Baseline Operasional</span>
                         </span>
                     </div>
@@ -316,9 +316,9 @@ const exportAuditCSV = () => {
                         </defs>
 
                         <!-- Subtle Grid lines -->
-                        <line x1="0" y1="45" x2="800" y2="45" stroke="currentColor" class="text-slate-100 dark:text-slate-800/80" stroke-width="1" />
-                        <line x1="0" y1="90" x2="800" y2="90" stroke="currentColor" class="text-slate-100 dark:text-slate-800/80" stroke-width="1" />
-                        <line x1="0" y1="135" x2="800" y2="135" stroke="currentColor" class="text-slate-100 dark:text-slate-800/80" stroke-width="1" />
+                        <line x1="0" y1="45" x2="800" y2="45" stroke="currentColor" class="text-slate-100 dark:text-zinc-800/80" stroke-width="1" />
+                        <line x1="0" y1="90" x2="800" y2="90" stroke="currentColor" class="text-slate-100 dark:text-zinc-800/80" stroke-width="1" />
+                        <line x1="0" y1="135" x2="800" y2="135" stroke="currentColor" class="text-slate-100 dark:text-zinc-800/80" stroke-width="1" />
 
                         <!-- Baseline Threshold Line -->
                         <line
@@ -327,7 +327,7 @@ const exportAuditCSV = () => {
                             x2="800"
                             :y2="chartPoints.baselineY"
                             stroke="currentColor"
-                            class="text-slate-300 dark:text-slate-700"
+                            class="text-slate-300 dark:text-zinc-700"
                             stroke-width="1"
                             stroke-dasharray="3 3"
                         />
@@ -352,18 +352,18 @@ const exportAuditCSV = () => {
                             :cx="p.x"
                             :cy="p.y"
                             r="3.5"
-                            class="fill-white dark:fill-[#0D121F] stroke-brand stroke-[2] hover:r-5 transition-all"
+                            class="fill-white dark:fill-[#141417] stroke-brand stroke-[2] hover:r-5 transition-all"
                         />
                     </svg>
                 </div>
 
-                <div class="flex justify-between mt-3 text-[11px] font-mono text-slate-400 dark:text-slate-500">
+                <div class="flex justify-between mt-3 text-[11px] font-mono text-slate-400 dark:text-zinc-500">
                     <span v-for="t in throughput.labels" :key="t">{{ t }}</span>
                 </div>
             </div>
 
             <!-- 5. Enterprise Audit Trail & Security Feed (Siapa Mengakses Apa & Kapan) -->
-            <div class="p-5 sm:p-6 bg-white border border-slate-200 rounded-xl dark:bg-[#0D121F] dark:border-slate-800/90 shadow-2xs space-y-4">
+            <div class="p-5 sm:p-6 bg-white border border-slate-200 rounded-xl dark:bg-[#141417] dark:border-zinc-800/90 shadow-2xs space-y-4">
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <div>
                         <div class="flex items-center gap-2">
@@ -386,15 +386,15 @@ const exportAuditCSV = () => {
                             v-model="auditFilter"
                             type="text"
                             placeholder="Cari aktor, event, IP..."
-                            class="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:ring-1 focus:ring-slate-900 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-200"
+                            class="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:ring-1 focus:ring-slate-900 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-200"
                         />
                     </div>
                 </div>
 
                 <!-- Audit Log Table -->
-                <div class="overflow-x-auto border border-slate-200 dark:border-slate-800/90 rounded-lg">
+                <div class="overflow-x-auto border border-slate-200 dark:border-zinc-800/90 rounded-lg">
                     <table class="w-full text-left text-xs">
-                        <thead class="bg-slate-50 text-[10px] font-mono font-bold uppercase text-slate-500 border-b border-slate-200 dark:bg-slate-900/60 dark:text-slate-400 dark:border-slate-800">
+                        <thead class="bg-slate-50 text-[10px] font-mono font-bold uppercase text-slate-500 border-b border-slate-200 dark:bg-zinc-900/80 dark:text-zinc-400 dark:border-zinc-800">
                             <tr>
                                 <th class="py-2.5 px-4">Log ID</th>
                                 <th class="py-2.5 px-4">Aktor / Pengguna</th>
@@ -405,18 +405,18 @@ const exportAuditCSV = () => {
                                 <th class="py-2.5 px-4 text-right">Timestamp</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800/60 font-mono">
+                        <tbody class="divide-y divide-slate-100 dark:divide-zinc-800/60 font-mono">
                             <tr
                                 v-for="log in filteredAuditLogs"
                                 :key="log.id"
-                                class="hover:bg-slate-50/60 dark:hover:bg-slate-800/30 transition-colors"
+                                class="hover:bg-slate-50/60 dark:hover:bg-zinc-800/30 transition-colors"
                             >
-                                <td class="py-3 px-4 font-bold text-slate-500 dark:text-slate-400">
+                                <td class="py-3 px-4 font-bold text-slate-500 dark:text-zinc-400">
                                     {{ log.id }}
                                 </td>
                                 <td class="py-3 px-4 font-sans">
                                     <div class="flex items-center gap-2">
-                                        <div class="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center font-bold text-[10px] text-slate-700 dark:text-slate-200">
+                                        <div class="w-6 h-6 rounded-full bg-slate-200 dark:bg-zinc-700 flex items-center justify-center font-bold text-[10px] text-slate-700 dark:text-zinc-200">
                                             {{ log.actor.charAt(0) }}
                                         </div>
                                         <div>
@@ -426,7 +426,7 @@ const exportAuditCSV = () => {
                                     </div>
                                 </td>
                                 <td class="py-3 px-4">
-                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700">
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-800 dark:bg-zinc-800 dark:text-zinc-200 border border-slate-200 dark:border-zinc-700">
                                         {{ log.event }}
                                     </span>
                                 </td>
