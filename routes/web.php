@@ -47,6 +47,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::post('closure', [ClosureController::class, 'store'])->name('closure.store');
     Route::post('closure/whatsapp', [ClosureController::class, 'triggerWhatsApp'])->name('closure.whatsapp');
     Route::get('closure/export', [ClosureController::class, 'exportExcel'])->name('closure.export');
+    Route::get('closure/export-excel', [ClosureController::class, 'exportExcel'])->name('closure.export-excel');
 
     // Users Management
     Route::post('users/bulk-delete', [UserController::class, 'bulkDestroy'])->name('users.bulk-delete');

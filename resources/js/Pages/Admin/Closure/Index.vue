@@ -564,7 +564,7 @@ const printClosureReport = () => {
                         <span class="text-xs font-bold text-slate-800 dark:text-zinc-200 block">Ekspor & Arsip Dokumen</span>
                         <div class="grid grid-cols-2 gap-2">
                             <a
-                                :href="route('admin.closure.export-excel')"
+                                :href="route().has('admin.closure.export-excel') ? route('admin.closure.export-excel') : (route().has('admin.closure.export') ? route('admin.closure.export') : '/admin/closure/export')"
                                 class="p-2.5 rounded-xl border border-slate-200 dark:border-zinc-700 hover:bg-slate-50 dark:hover:bg-zinc-800 text-slate-700 dark:text-zinc-200 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
                             >
                                 <FileSpreadsheet class="w-4 h-4 text-emerald-600" />
