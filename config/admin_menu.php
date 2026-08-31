@@ -52,5 +52,12 @@ return [
             'active' => 'admin.settings.*',
             'permission' => 'view-settings',
         ],
+        [
+            'title' => 'Audit Logs',
+            'icon' => 'Activity',
+            'route' => 'admin.audit-logs.index',
+            'active' => 'admin.audit-logs.*',
+            'permission' => 'view-audit-logs',
+        ],
     ],
 ];

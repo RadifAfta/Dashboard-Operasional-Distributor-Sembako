@@ -37,6 +37,9 @@ class RolePermissionSeeder extends Seeder
             // Settings
             'view-settings',
             'edit-settings',
+
+            // Audit Logs
+            'view-audit-logs',
         ];
 
         foreach ($permissions as $permission) {
@@ -57,6 +60,7 @@ class RolePermissionSeeder extends Seeder
             'view-roles',
             'view-settings',
             'edit-settings',
+            'view-audit-logs',
         ]);
 
         // 3. User

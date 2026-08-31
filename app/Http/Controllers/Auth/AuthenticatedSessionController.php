@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\AuditLog;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,6 +34,8 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        AuditLog::record('auth', 'Pengguna berhasil masuk ke sistem (Login)', Auth::user());
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
@@ -41,6 +44,11 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        $user = Auth::user();
+        if ($user) {
+            AuditLog::record('auth', 'Pengguna keluar dari sistem (Logout)', $user);
+        }
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();

@@ -31,6 +31,7 @@ import {
     Database,
     Calendar,
     Boxes,
+    Activity,
 } from 'lucide-vue-next';
 
 import { applyBrandTheme } from '@/Utils/brandTheme';
@@ -166,6 +167,7 @@ const iconMap = {
     Calendar,
     Boxes,
     Building2,
+    Activity,
 };
 
 const resolveIcon = (iconName) => {
