@@ -36,6 +36,14 @@ return [
             'active' => 'admin.debts.*',
             'permission' => null,
         ],
+        [
+            'section' => 'Transaksi',
+            'title' => 'Rekap Kas & Tutup Buku',
+            'icon' => 'FileText',
+            'route' => 'admin.closure.index',
+            'active' => 'admin.closure.*',
+            'permission' => null,
+        ],
 
         // 3. MASTER DATA
         [
@@ -60,17 +68,7 @@ return [
             ],
         ],
 
-        // 4. LAPORAN
-        [
-            'section' => 'Laporan',
-            'title' => 'Laporan & Tutup Buku',
-            'icon' => 'FileText',
-            'route' => 'admin.closure.index',
-            'active' => 'admin.closure.*',
-            'permission' => null,
-        ],
-
-        // 5. PENGATURAN & SISTEM
+        // 4. PENGATURAN & SISTEM
         [
             'section' => 'Sistem & Pengaturan',
             'title' => 'Manajemen User',
