@@ -55,7 +55,16 @@ class ClosureController extends Controller
         $closureHistory = DailyCashClosure::with('user')
             ->orderBy('closure_date', 'desc')
             ->limit(15)
-            ->get();
+            ->get()
+            ->map(fn ($c) => [
+                'id' => $c->id,
+                'closure_date' => $c->closure_date ? Carbon::parse($c->closure_date)->format('d M Y') : '-',
+                'total_omzet' => (float) $c->total_omzet,
+                'expected_cash' => (float) $c->expected_cash,
+                'actual_cash' => (float) $c->actual_cash,
+                'difference' => (float) $c->difference,
+                'closed_by_user' => $c->user?->name ?? 'Kasir Toko',
+            ]);
 
         $storeInfo = [
             'name' => Setting::get('app_name', 'Distributor Sembako Berkah Mandiri'),
@@ -64,23 +73,27 @@ class ClosureController extends Controller
             'demo_wa_number' => Setting::get('demo_wa_number', '6281288889999'),
         ];
 
+        $todayMetrics = [
+            'date' => $today->format('Y-m-d'),
+            'formatted_date' => $today->translatedFormat('l, d F Y'),
+            'omzet_today' => $totalOmzet,
+            'profit_today' => $totalProfit,
+            'cash_sales_today' => $totalCashSales,
+            'transfer_sales_today' => $totalTransferSales,
+            'credit_sales_today' => $totalCreditSales,
+            'debt_cash_collected' => $debtCashCollected,
+            'expected_cash' => $expectedCash,
+            'transaction_count' => $todayTransactions->count(),
+            'overdue_debts' => $overdueDebts,
+        ];
+
         return Inertia::render('Admin/Closure/Index', [
-            'summary' => [
-                'date' => $today->translatedFormat('l, d F Y'),
-                'raw_date' => $today->format('Y-m-d'),
-                'total_omzet' => $totalOmzet,
-                'total_profit' => $totalProfit,
-                'total_cash_sales' => $totalCashSales,
-                'total_transfer_sales' => $totalTransferSales,
-                'total_credit_sales' => $totalCreditSales,
-                'debt_cash_collected' => $debtCashCollected,
-                'expected_cash' => $expectedCash,
-                'transactions_count' => $todayTransactions->count(),
-                'overdue_debts' => $overdueDebts,
-            ],
+            'todayMetrics' => $todayMetrics,
+            'summary' => $todayMetrics,
             'todayClosure' => $todayClosure,
             'closureHistory' => $closureHistory,
             'storeInfo' => $storeInfo,
+            'ownerPhone' => $storeInfo['demo_wa_number'],
         ]);
     }
 

@@ -39,6 +39,19 @@ class DistributorOperationsTest extends TestCase
         );
     }
 
+    public function test_closure_page_renders_successfully(): void
+    {
+        $response = $this->actingAs($this->admin)->get(route('admin.closure.index'));
+
+        $response->assertStatus(200);
+        $response->assertInertia(fn ($page) => $page
+            ->component('Admin/Closure/Index')
+            ->has('todayMetrics')
+            ->has('closureHistory')
+            ->has('storeInfo')
+        );
+    }
+
     public function test_can_create_product_with_multi_units(): void
     {
         $response = $this->actingAs($this->admin)->post(route('admin.products.store'), [

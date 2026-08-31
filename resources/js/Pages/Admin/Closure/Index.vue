@@ -24,7 +24,11 @@ import {
 const props = defineProps({
     todayMetrics: {
         type: Object,
-        required: true,
+        default: () => ({}),
+    },
+    summary: {
+        type: Object,
+        default: () => ({}),
     },
     todayClosure: {
         type: Object,
@@ -34,21 +38,43 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
+    storeInfo: {
+        type: Object,
+        default: () => ({}),
+    },
     whatsappSummary: {
         type: String,
         default: '',
     },
     ownerPhone: {
         type: String,
-        default: '628123456789',
+        default: '6281288889999',
     },
 });
 
 const toast = useToast();
 
+// Robust Normalized Metrics (Mencegah crash jika prop summary / todayMetrics tertukar atau kosong)
+const metrics = computed(() => {
+    const src = (props.todayMetrics && Object.keys(props.todayMetrics).length > 0)
+        ? props.todayMetrics
+        : (props.summary || {});
+
+    return {
+        date: src.date || src.raw_date || new Date().toISOString().split('T')[0],
+        omzet_today: Number(src.omzet_today ?? src.total_omzet ?? 0),
+        profit_today: Number(src.profit_today ?? src.total_profit ?? 0),
+        cash_sales_today: Number(src.cash_sales_today ?? src.total_cash_sales ?? 0),
+        credit_sales_today: Number(src.credit_sales_today ?? src.total_credit_sales ?? 0),
+        expected_cash: Number(src.expected_cash ?? src.cash_sales_today ?? src.total_cash_sales ?? 0),
+        transaction_count: Number(src.transaction_count ?? src.transactions_count ?? 0),
+        overdue_debts: Number(src.overdue_debts ?? 0),
+    };
+});
+
 // Form Rekap Pecahan Uang Fisik Laci
 const notes = ref(props.todayClosure?.notes || '');
-const targetPhone = ref(props.ownerPhone);
+const targetPhone = ref(props.ownerPhone || props.storeInfo?.demo_wa_number || '6281288889999');
 
 const denominations = ref({
     d100k: props.todayClosure?.denominations?.d100k || 0,
@@ -84,7 +110,7 @@ const totalPhysicalCash = computed(() => {
 
 // Expected cash according to system
 const expectedCash = computed(() => {
-    return Number(props.todayMetrics.cash_sales_today || 0);
+    return metrics.value.expected_cash;
 });
 
 // Difference = Physical - Expected
@@ -159,16 +185,16 @@ const submitClosure = () => {
         {
             actual_cash: totalPhysicalCash.value,
             expected_cash: expectedCash.value,
-            total_omzet: props.todayMetrics.omzet_today,
-            total_profit: props.todayMetrics.profit_today,
-            total_cash_sales: props.todayMetrics.cash_sales_today,
-            total_credit_sales: props.todayMetrics.credit_sales_today,
+            total_omzet: metrics.value.omzet_today,
+            total_profit: metrics.value.profit_today,
+            total_cash_sales: metrics.value.cash_sales_today,
+            total_credit_sales: metrics.value.credit_sales_today,
             denominations: denominations.value,
             notes: notes.value,
             wa_phone: targetPhone.value,
         },
         {
-            onSuccess: (page) => {
+            onSuccess: () => {
                 isSubmitting.value = false;
                 toast.success('Tutup Buku Tersimpan', 'Rekap kas fisik laci berhasil diarsipkan.');
                 triggerWhatsAppSimulator();
@@ -195,7 +221,7 @@ const triggerWhatsAppSimulator = () => {
         },
         body: JSON.stringify({
             phone: targetPhone.value,
-            closure_date: props.todayMetrics.date,
+            closure_date: metrics.value.date,
         }),
     })
         .then((res) => res.json())
@@ -224,25 +250,25 @@ const printClosureReport = () => {
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div class="p-5 rounded-2xl bg-white dark:bg-[#141417] border border-slate-200/80 dark:border-zinc-800/80 shadow-2xs">
                     <span class="text-xs font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">Total Omzet Hari Ini</span>
-                    <div class="text-2xl font-extrabold text-slate-900 dark:text-white mt-1">{{ formatRupiah(todayMetrics.omzet_today) }}</div>
-                    <span class="text-[11px] text-slate-400 dark:text-zinc-500 mt-1 block">{{ todayMetrics.transaction_count }} Transaksi Selesai</span>
+                    <div class="text-2xl font-extrabold text-slate-900 dark:text-white mt-1">{{ formatRupiah(metrics.omzet_today) }}</div>
+                    <span class="text-[11px] text-slate-400 dark:text-zinc-500 mt-1 block">{{ metrics.transaction_count }} Transaksi Selesai</span>
                 </div>
 
                 <div class="p-5 rounded-2xl bg-white dark:bg-[#141417] border border-slate-200/80 dark:border-zinc-800/80 shadow-2xs">
                     <span class="text-xs font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">Kas Tunai Sistem (Expected)</span>
-                    <div class="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-1">{{ formatRupiah(todayMetrics.cash_sales_today) }}</div>
+                    <div class="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-1">{{ formatRupiah(metrics.cash_sales_today) }}</div>
                     <span class="text-[11px] text-slate-400 dark:text-zinc-500 mt-1 block">Wajib ada di laci kasir</span>
                 </div>
 
                 <div class="p-5 rounded-2xl bg-white dark:bg-[#141417] border border-slate-200/80 dark:border-zinc-800/80 shadow-2xs">
                     <span class="text-xs font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">Penjualan Tempo (Kredit)</span>
-                    <div class="text-2xl font-extrabold text-amber-600 dark:text-amber-400 mt-1">{{ formatRupiah(todayMetrics.credit_sales_today) }}</div>
+                    <div class="text-2xl font-extrabold text-amber-600 dark:text-amber-400 mt-1">{{ formatRupiah(metrics.credit_sales_today) }}</div>
                     <span class="text-[11px] text-slate-400 dark:text-zinc-500 mt-1 block">Tercatat piutang</span>
                 </div>
 
                 <div class="p-5 rounded-2xl bg-white dark:bg-[#141417] border border-slate-200/80 dark:border-zinc-800/80 shadow-2xs">
                     <span class="text-xs font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">Estimasi Laba Kotor</span>
-                    <div class="text-2xl font-extrabold text-brand mt-1">{{ formatRupiah(todayMetrics.profit_today) }}</div>
+                    <div class="text-2xl font-extrabold text-brand mt-1">{{ formatRupiah(metrics.profit_today) }}</div>
                     <span class="text-[11px] text-slate-400 dark:text-zinc-500 mt-1 block">Margin kotor bersih dari HPP</span>
                 </div>
             </div>
