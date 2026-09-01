@@ -85,6 +85,8 @@ class HandleInertiaRequests extends Middleware
                 'description' => Setting::get('app_description', ''),
                 'currency_symbol' => Setting::get('currency_symbol', 'Rp'),
                 'brand_color' => Setting::get('brand_color', 'indigo'),
+                'logo_url' => Setting::get('app_logo') ?: null,
+                'contact_email' => Setting::get('contact_email', 'admin@example.com'),
             ],
         ];
     }

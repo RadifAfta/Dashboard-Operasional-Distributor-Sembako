@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, useForm, usePage } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import Alert from '@/Components/Admin/Alert.vue';
 import { useToast } from '@/Composables/useToast';
@@ -19,9 +19,12 @@ import {
     Info,
     Sparkles,
     Palette,
+    UploadCloud,
+    Trash2,
 } from 'lucide-vue-next';
 
 const toast = useToast();
+const page = usePage();
 
 const props = defineProps({
     settings: {
@@ -58,11 +61,47 @@ if (!formItems.some((s) => s.key === 'brand_color')) {
 
 const form = useForm({
     settings: formItems,
+    logo: null,
+    remove_logo: false,
 });
+
+const fileInput = ref(null);
+const logoPreview = ref(null);
+
+const currentDisplayedLogo = computed(() => {
+    if (logoPreview.value) {
+        return logoPreview.value;
+    }
+    if (form.remove_logo) {
+        return null;
+    }
+    return page.props.appSettings?.logo_url || null;
+});
+
+const onLogoSelected = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    form.logo = file;
+    form.remove_logo = false;
+    logoPreview.value = URL.createObjectURL(file);
+};
+
+const removeLogo = () => {
+    form.logo = null;
+    form.remove_logo = true;
+    logoPreview.value = null;
+    if (fileInput.value) fileInput.value.value = '';
+};
 
 const submit = () => {
     form.post(route('admin.settings.update'), {
         preserveScroll: true,
+        forceFormData: true,
+        onSuccess: () => {
+            form.logo = null;
+            form.remove_logo = false;
+            logoPreview.value = null;
+        },
     });
 };
 
@@ -245,6 +284,78 @@ const onHexTextInput = (raw) => {
                             type="email"
                             class="w-full px-3 py-2 text-xs border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand/20 focus:border-brand dark:bg-zinc-800 dark:border-zinc-700 dark:text-white"
                         />
+                    </div>
+
+                    <!-- Company Logo Uploader Card -->
+                    <div class="p-4 rounded-2xl bg-slate-50 dark:bg-[#0E0E11] border border-slate-200/80 dark:border-zinc-800 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-800 dark:text-slate-200">
+                                    Logo Resmi Perusahaan
+                                </label>
+                                <p class="text-[11px] text-slate-400 mt-0.5">
+                                    Format PNG, SVG, JPG, atau WebP transparan (maks. 2MB). Ditampilkan di sidebar dashboard dan halaman login.
+                                </p>
+                            </div>
+                            <span v-if="currentDisplayedLogo" class="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/60">
+                                File Logo Aktif
+                            </span>
+                            <span v-else class="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-700">
+                                Mode Inisial
+                            </span>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row items-center gap-4 pt-1">
+                            <!-- Live Logo Preview Box -->
+                            <div class="w-20 h-20 rounded-2xl border-2 border-dashed border-slate-300 dark:border-zinc-700 bg-white dark:bg-[#141417] flex items-center justify-center p-2 shrink-0 overflow-hidden shadow-2xs">
+                                <img
+                                    v-if="currentDisplayedLogo"
+                                    :src="currentDisplayedLogo"
+                                    alt="Preview Logo"
+                                    class="w-full h-full object-contain"
+                                />
+                                <div
+                                    v-else
+                                    class="w-12 h-12 rounded-xl bg-brand text-white font-black text-xl flex items-center justify-center shadow-sm shadow-brand/30 select-none"
+                                >
+                                    {{ (getSetting('app_name')?.value || 'A').charAt(0) }}
+                                </div>
+                            </div>
+
+                            <!-- Upload & Action Controls -->
+                            <div class="flex-1 w-full space-y-2">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <input
+                                        ref="fileInput"
+                                        type="file"
+                                        accept="image/png,image/jpeg,image/svg+xml,image/webp"
+                                        class="hidden"
+                                        @change="onLogoSelected"
+                                    />
+                                    <button
+                                        type="button"
+                                        @click="fileInput?.click()"
+                                        class="inline-flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded-xl bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 dark:bg-zinc-900 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-800 transition cursor-pointer shadow-2xs"
+                                    >
+                                        <UploadCloud class="w-4 h-4 text-brand" />
+                                        <span>{{ currentDisplayedLogo ? 'Ganti File Logo' : 'Unggah Logo Perusahaan' }}</span>
+                                    </button>
+
+                                    <button
+                                        v-if="currentDisplayedLogo"
+                                        type="button"
+                                        @click="removeLogo"
+                                        class="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl bg-rose-50 border border-rose-200 hover:bg-rose-100 text-rose-600 dark:bg-rose-950/30 dark:border-rose-900/50 dark:text-rose-400 dark:hover:bg-rose-900/40 transition cursor-pointer"
+                                    >
+                                        <Trash2 class="w-3.5 h-3.5" />
+                                        <span>Hapus Logo (Gunakan Inisial)</span>
+                                    </button>
+                                </div>
+                                <p class="text-[10px] text-slate-400 dark:text-zinc-500">
+                                    Klik tombol "Simpan Pengaturan" di bawah untuk menerapkan logo baru secara permanen.
+                                </p>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Brand Accent Color Palette Selector -->

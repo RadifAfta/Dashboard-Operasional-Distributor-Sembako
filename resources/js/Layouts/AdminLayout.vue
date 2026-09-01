@@ -3,6 +3,7 @@ import { ref, onMounted, computed } from 'vue';
 import { Link, usePage, router } from '@inertiajs/vue3';
 import Toast from '@/Components/Admin/Toast.vue';
 import CommandPalette from '@/Components/Admin/CommandPalette.vue';
+import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import {
     LayoutDashboard,
     Users,
@@ -142,7 +143,7 @@ const toggleTheme = () => {
 
 onMounted(() => {
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    if (savedTheme === 'dark') {
         isDark.value = true;
         document.documentElement.classList.add('dark');
     } else {
@@ -256,19 +257,7 @@ const logout = () => {
             >
                 <!-- Workspace Header -->
                 <div class="flex items-center justify-between h-14 px-3.5 border-b border-slate-200 dark:border-slate-800/80">
-                    <div class="flex items-center gap-2.5 overflow-hidden">
-                        <div class="flex items-center justify-center w-7 h-7 rounded-lg bg-brand text-white font-black text-xs tracking-wider shrink-0 shadow-sm">
-                            {{ appSettings.name.charAt(0) }}
-                        </div>
-                        <div v-show="!sidebarCollapsed" class="flex flex-col truncate">
-                            <span class="font-bold text-xs tracking-tight text-slate-900 dark:text-white truncate">
-                                {{ appSettings.name }}
-                            </span>
-                            <span class="text-[10px] font-mono text-slate-400 dark:text-slate-400 truncate">
-                                Enterprise Console
-                            </span>
-                        </div>
-                    </div>
+                    <ApplicationLogo size="sm" :showText="!sidebarCollapsed" />
 
                     <button
                         @click="sidebarOpen = false"
