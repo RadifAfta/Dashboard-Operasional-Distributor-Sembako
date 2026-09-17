@@ -11,6 +11,7 @@ import {
     LogIn,
     CheckCircle2,
     ShieldCheck,
+    Sparkles,
 } from 'lucide-vue-next';
 
 defineProps({
@@ -39,6 +40,14 @@ const submit = () => {
     form.post(route('login'), {
         onFinish: () => form.reset('password'),
     });
+};
+
+const fillDemoAccount = (email, password, autoSubmit = false) => {
+    form.email = email;
+    form.password = password;
+    if (autoSubmit) {
+        submit();
+    }
 };
 </script>
 
@@ -171,6 +180,45 @@ const submit = () => {
                         </button>
                     </div>
                 </form>
+
+                <!-- Demo Accounts Portfolio Section -->
+                <div class="pt-4 border-t border-dashed border-slate-200 dark:border-zinc-800 space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-1.5 text-xs font-semibold text-slate-700 dark:text-zinc-200">
+                            <Sparkles class="w-3.5 h-3.5 text-amber-500" />
+                            <span>Akun Demo Portfolio</span>
+                        </div>
+                        <span class="text-[10px] text-slate-400 dark:text-zinc-500">Klik untuk isi & masuk</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <!-- Super Admin Button -->
+                        <button
+                            type="button"
+                            @click="fillDemoAccount('admin@example.com', 'password', true)"
+                            class="p-2.5 rounded-xl border border-slate-200 dark:border-zinc-800 bg-slate-50 hover:bg-brand/5 hover:border-brand/40 dark:bg-zinc-900/60 dark:hover:bg-zinc-800 transition text-left group cursor-pointer shadow-2xs"
+                        >
+                            <div class="flex items-center justify-between mb-0.5">
+                                <span class="font-bold text-[11px] text-slate-800 dark:text-zinc-200 group-hover:text-brand">Super Admin</span>
+                                <span class="text-[9px] px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 font-semibold">Owner</span>
+                            </div>
+                            <p class="text-[10px] text-slate-500 dark:text-zinc-400 truncate">admin@example.com</p>
+                        </button>
+
+                        <!-- Manager Button -->
+                        <button
+                            type="button"
+                            @click="fillDemoAccount('manager@example.com', 'password', true)"
+                            class="p-2.5 rounded-xl border border-slate-200 dark:border-zinc-800 bg-slate-50 hover:bg-brand/5 hover:border-brand/40 dark:bg-zinc-900/60 dark:hover:bg-zinc-800 transition text-left group cursor-pointer shadow-2xs"
+                        >
+                            <div class="flex items-center justify-between mb-0.5">
+                                <span class="font-bold text-[11px] text-slate-800 dark:text-zinc-200 group-hover:text-brand">Manager</span>
+                                <span class="text-[9px] px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300 font-semibold">Admin</span>
+                            </div>
+                            <p class="text-[10px] text-slate-500 dark:text-zinc-400 truncate">manager@example.com</p>
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <!-- Sub-Card Support & Helpdesk Note -->
