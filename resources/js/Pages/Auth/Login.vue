@@ -11,7 +11,7 @@ import {
     LogIn,
     CheckCircle2,
     ShieldCheck,
-    Sparkles,
+    ArrowRight,
 } from 'lucide-vue-next';
 
 defineProps({
@@ -181,14 +181,15 @@ const fillDemoAccount = (email, password, autoSubmit = false) => {
                     </div>
                 </form>
 
-                <!-- Demo Accounts Portfolio Section -->
-                <div class="pt-4 border-t border-dashed border-slate-200 dark:border-zinc-800 space-y-2.5">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-1.5 text-xs font-semibold text-slate-700 dark:text-zinc-200">
-                            <Sparkles class="w-3.5 h-3.5 text-amber-500" />
-                            <span>Akun Demo Portfolio</span>
+                <!-- Demo Quick Access (Clean SaaS Style) -->
+                <div class="space-y-3 pt-2">
+                    <div class="relative flex items-center justify-center">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-slate-200/80 dark:border-zinc-800"></div>
                         </div>
-                        <span class="text-[10px] text-slate-400 dark:text-zinc-500">Klik untuk isi & masuk</span>
+                        <span class="relative bg-white dark:bg-[#141417] px-2.5 text-[10px] uppercase font-bold tracking-wider text-slate-400 dark:text-zinc-500">
+                            Akses Cepat Demo
+                        </span>
                     </div>
 
                     <div class="grid grid-cols-2 gap-2">
@@ -196,26 +197,34 @@ const fillDemoAccount = (email, password, autoSubmit = false) => {
                         <button
                             type="button"
                             @click="fillDemoAccount('admin@example.com', 'password', true)"
-                            class="p-2.5 rounded-xl border border-slate-200 dark:border-zinc-800 bg-slate-50 hover:bg-brand/5 hover:border-brand/40 dark:bg-zinc-900/60 dark:hover:bg-zinc-800 transition text-left group cursor-pointer shadow-2xs"
+                            class="group flex items-center justify-between p-2.5 rounded-xl border border-slate-200 dark:border-zinc-800/80 hover:border-slate-300 dark:hover:border-zinc-700 bg-slate-50/60 hover:bg-slate-100/70 dark:bg-zinc-900/40 dark:hover:bg-zinc-800/70 transition-all text-left cursor-pointer"
                         >
-                            <div class="flex items-center justify-between mb-0.5">
-                                <span class="font-bold text-[11px] text-slate-800 dark:text-zinc-200 group-hover:text-brand">Super Admin</span>
-                                <span class="text-[9px] px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 font-semibold">Owner</span>
+                            <div class="min-w-0 pr-1">
+                                <div class="text-[11px] font-semibold text-slate-800 dark:text-zinc-200 group-hover:text-slate-900 dark:group-hover:text-white">
+                                    Super Admin
+                                </div>
+                                <div class="text-[10px] text-slate-400 dark:text-zinc-500 font-mono truncate">
+                                    admin@example.com
+                                </div>
                             </div>
-                            <p class="text-[10px] text-slate-500 dark:text-zinc-400 truncate">admin@example.com</p>
+                            <ArrowRight class="w-3.5 h-3.5 text-slate-300 dark:text-zinc-600 group-hover:text-slate-600 dark:group-hover:text-zinc-200 group-hover:translate-x-0.5 transition-all shrink-0" />
                         </button>
 
                         <!-- Manager Button -->
                         <button
                             type="button"
                             @click="fillDemoAccount('manager@example.com', 'password', true)"
-                            class="p-2.5 rounded-xl border border-slate-200 dark:border-zinc-800 bg-slate-50 hover:bg-brand/5 hover:border-brand/40 dark:bg-zinc-900/60 dark:hover:bg-zinc-800 transition text-left group cursor-pointer shadow-2xs"
+                            class="group flex items-center justify-between p-2.5 rounded-xl border border-slate-200 dark:border-zinc-800/80 hover:border-slate-300 dark:hover:border-zinc-700 bg-slate-50/60 hover:bg-slate-100/70 dark:bg-zinc-900/40 dark:hover:bg-zinc-800/70 transition-all text-left cursor-pointer"
                         >
-                            <div class="flex items-center justify-between mb-0.5">
-                                <span class="font-bold text-[11px] text-slate-800 dark:text-zinc-200 group-hover:text-brand">Manager</span>
-                                <span class="text-[9px] px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300 font-semibold">Admin</span>
+                            <div class="min-w-0 pr-1">
+                                <div class="text-[11px] font-semibold text-slate-800 dark:text-zinc-200 group-hover:text-slate-900 dark:group-hover:text-white">
+                                    Manager
+                                </div>
+                                <div class="text-[10px] text-slate-400 dark:text-zinc-500 font-mono truncate">
+                                    manager@example.com
+                                </div>
                             </div>
-                            <p class="text-[10px] text-slate-500 dark:text-zinc-400 truncate">manager@example.com</p>
+                            <ArrowRight class="w-3.5 h-3.5 text-slate-300 dark:text-zinc-600 group-hover:text-slate-600 dark:group-hover:text-zinc-200 group-hover:translate-x-0.5 transition-all shrink-0" />
                         </button>
                     </div>
                 </div>
